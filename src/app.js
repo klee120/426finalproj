@@ -9,6 +9,8 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene } from 'scenes';
+// Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
+import { State } from 'gameLogic';
 
 // Initialize core ThreeJS components
 const scene = new SeedScene();
@@ -53,3 +55,7 @@ const windowResizeHandler = () => {
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
+
+// Add game state
+const state = new State(3);
+window.addEventListener('keydown', state.handleKeyDown, false);
