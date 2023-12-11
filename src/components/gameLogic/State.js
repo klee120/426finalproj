@@ -12,7 +12,10 @@ class State {
     }
 
     handleKeyDown(event) {
-        console.log(event);
+        if (event.keyCode < 65 || event.keyCode > 90) {
+            return;
+        }
+        
     }
 }
 

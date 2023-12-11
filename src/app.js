@@ -59,3 +59,4 @@ window.addEventListener('resize', windowResizeHandler, false);
 // Add game state
 const state = new State(3);
 window.addEventListener('keydown', state.handleKeyDown, false);
+
