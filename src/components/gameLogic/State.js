@@ -9,10 +9,18 @@ class State {
         if (lives == null || lives <= 0) {
             lives = 3;
         }
+
+        this.game = new Game(lives);
     }
 
     handleKeyDown(event) {
-        console.log(event);
+        if (event.key === 'f') {
+            this.game.addFruit();
+        } else if (event.key === 'Enter') {
+            console.log(this.game);
+        } else {
+            this.game.acceptLetter(event.key.toLowerCase());
+        }
     }
 }
 

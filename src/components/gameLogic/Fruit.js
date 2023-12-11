@@ -25,16 +25,16 @@ class Fruit {
 
     acceptLetter(letter) {
         // catch erroneous case where fruit is interacted with despite being done
-        if (this.currentWordIndex >= this.word.length()) {
+        if (this.currentWordIndex >= this.word.length) {
             // Exceptions reference: https://www.w3schools.com/js/js_errors.asp
             throw 'Fruit is already done!';
         }
 
         if (this.word.charAt(this.currentWordIndex) === letter) {
-            this.currentWordIndex = this.currentWordInex + 1;
+            this.currentWordIndex = this.currentWordIndex + 1;
         }
 
-        if (this.currentWordIndex >= this.word.length()) {
+        if (this.currentWordIndex >= this.word.length) {
             return true;
         }
 

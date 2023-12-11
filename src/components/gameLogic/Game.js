@@ -40,15 +40,20 @@ class Game {
         this.currentFruit = null;
     }
 
-    addFruit() {
+    getRandomWord() {
         // TODO: Randomly choose word
-        word = 'testing';
+        return 'testing';
+    }
 
-        if (!word || word.length() == 0) {
+    addFruit() {
+        let word = this.getRandomWord();
+        if (!word || word.length == 0) {
             throw { message: 'Invalid word', word: word };
         }
         // TODO: Randomly choose fruit type, location
-        this.fruits.append(new Fruit(word, Fruit.FruitType.APPLE, [0, 0]));
+        this.fruits.push(
+            new Fruit(this.fruits.length, word, Fruit.FruitType.APPLE, [0, 0])
+        );
     }
 
     /**
@@ -59,6 +64,11 @@ class Game {
         letter = letter.toLowerCase();
         // no fruit right now
         if (!this.currentFruit) {
+            if (this.fruits.length === 0) {
+                // do nothing if there's no fruits
+                return;
+            }
+
             for (const fruit of this.fruits) {
                 // arbitrarily pick first seen.
                 // TODO: Prevent fruits from starting with the same letter
@@ -72,10 +82,16 @@ class Game {
         let done = this.currentFruit.acceptLetter(letter);
         if (done) {
             console.log('Finished fruit', this.currentFruit);
-            this.currentFruit = null;
 
             // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
             this.fruits.splice(this.currentFruit.id, 1);
+
+            // re-index fruits
+            for (let i = 0; i < this.fruits.length; i++) {
+                this.fruits[i].id = i;
+            }
+
+            this.currentFruit = null;
 
             // TODO: More dynamic point allocation
             this.points = this.points + 1;
