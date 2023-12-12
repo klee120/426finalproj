@@ -1,7 +1,9 @@
-class Ninja {
+import { Vector3 } from 'three';
+
+class Ninja extends Vector3 {
     // Enum of ninja positions
     // Reference: https://www.sohamkamani.com/javascript/enums/
-    static NinjaLocation = [0,0]
+    static NinjaLocation = Vector3(0, 0, 0);
     static NinjaPosition = {
         FRONT: Symbol('front', 'front-white.png'),
         DOWN: Symbol('down', 'down-white.png'),
@@ -16,41 +18,38 @@ class Ninja {
 
     /**
      * Creates a Ninja object.
-     * @param {number} id - An integer dynamic id
-     * @param {string} word - The word
-     * @param {Symbol} ninjaPosition - The fruit type
      * @param {number} level - The current level
      */
-    constructor(ninjaPosition, level) {
+    constructor(level) {
         this.ninjaPosition = NinjaPosition.FRONT;
-        this.level = level
+        this.level = level;
     }
 
     // calculates angle based on given fruit position + changes position
+    // fruitPosition is the fruit vector (can be changed)
     changePosition(fruitPosition) {
-        // replace [5,0] with another point above the ninja's location
-        let straightVector = [5 - NinjaLocation[0], 0 - NinjaLocation[1]]
-        let straightMag = Math.SQRT2(Math.pow(straightVector[0], 2) + Math.pow(straightVector[1], 2))
-        let fruitVector = [fruitPosition[0] - NinjaLocation[0], fruitPosition[1] - NinjaLocation[1]]
-        let fruitMag = Math.SQRT2(Math.pow(fruitVector[0], 2) + Math.pow(fruitVector[1], 2))
-        let dotProduct = straightVector[0] * fruitVector[0] + fruitVector[1] * fruitPosition[1]
-        let angle = Math.acos(dotProduct/(straightMag * fruitMag))
-        if (angle == 0) {
-            this.ninjaPosition = NinjaPosition.UP
-        } else if (0 < angle && angle < 90) {
-            this.ninjaPositon = NinjaPosition.UP_RIGHT
-        } else if (angle == 90) {
-            this.ninjaPosition = NinjaPosition.RIGHT
-        } else if (90 < angle && angle < 180) {
-            this.ninjaPosition = NinjaPosition.DOWN_RIGHT
-        } else if (angle == 180) {
-            this.ninjaPosition = NinjaPosition.DOWN
-        } else if (180 < angle && angle < 270) {
-            this.ninjaPosition = NinjaPosition.DOWN_LEFT
-        } else if (angle == 270) {
-            this.ninjaPosition = NinjaPosition.LEFT
-        } else if (270 < angle && angle < 360) {
-            this.ninjaPosition = NinjaPosition.UP_LEFT
+        const fruitPosition = fruitPosition.normalize();
+        let angle = Math.atan2(fruitPosition.y / fruitPosition.x);
+        angle = angle * (180 / Math.PI);
+        if ((angle >= 0 && angle < 22.5) || (angle <= 0 && angle > -22.5)) {
+            this.ninjaPosition = NinjaPosition.RIGHT;
+        } else if (22.5 <= angle && angle < 67.5) {
+            this.ninjaPositon = NinjaPosition.UP_RIGHT;
+        } else if (67.5 <= angle && angle < 112.5) {
+            this.ninjaPosition = NinjaPosition.UP;
+        } else if (112.5 <= angle && angle < 157.5) {
+            this.ninjaPosition = NinjaPosition.UP_LEFT;
+        } else if (
+            (157.5 <= angle && angle <= 180) ||
+            (angle >= -180 && angle < -157.5)
+        ) {
+            this.ninjaPosition = NinjaPosition.LEFT;
+        } else if (angle >= -157.5 && angle < -112.5) {
+            this.ninjaPosition = NinjaPosition.DOWN_LEFT;
+        } else if (angle >= -112.5 && angle < -67.5) {
+            this.ninjaPosition = NinjaPosition.DOWN;
+        } else if (angle >= -67.5 && angle < -22.5) {
+            this.ninjaPosition = NinjaPosition.DOWN_RIGHT;
         }
     }
 }

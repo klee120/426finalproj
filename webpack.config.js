@@ -40,6 +40,7 @@ module.exports = {
             objects$: path.resolve(__dirname, 'src/components/objects'),
             scenes$: path.resolve(__dirname, 'src/components/scenes'),
             gameLogic$: path.resolve(__dirname, 'src/components/gameLogic'),
+            defines$: path.resolve(__dirname, 'src/components/defines'),
         },
     },
     plugins: [

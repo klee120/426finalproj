@@ -1,199 +1,6 @@
-import Fruit from './Fruit.js';
-
-const words = {
-    1: [
-        'cat',
-        'sun',
-        'apple',
-        'hope',
-        'was',
-        'beach',
-        'chair',
-        'dog',
-        'elf',
-        'lover',
-        'fox',
-        'igloo',
-        'pixel',
-        'color',
-        'giraffe',
-        'ray',
-        'kind',
-        'lizard',
-        'muffin',
-        'nap',
-        'ostrich',
-        'pillow',
-        'queen',
-        'rizz',
-        'star',
-        'tea',
-        'unite',
-        'zen',
-        'lace',
-        'pool',
-    ],
-    2: [
-        'cat',
-        'sun',
-        'apple',
-        'hope',
-        'was',
-        'beach',
-        'chair',
-        'dog',
-        'elf',
-        'lover',
-        'fox',
-        'igloo',
-        'pixel',
-        'color',
-        'giraffe',
-        'ray',
-        'kind',
-        'lizard',
-        'muffin',
-        'nap',
-        'ostrich',
-        'pillow',
-        'queen',
-        'rizz',
-        'star',
-        'tea',
-        'unite',
-        'zen',
-        'lace',
-        'pool',
-        'blubber',
-        'chicken',
-        'really',
-        'joy',
-        'katie',
-        'andrew',
-        'genie',
-        'purple',
-        'banana',
-        'happy',
-        'guitar',
-        'basket',
-        'butter',
-        'planet',
-        'silver',
-        'laptop',
-        'monkey',
-        'orange',
-        'dragon',
-        'turtle',
-        'whisper',
-        'kangaroo',
-        'sparkle',
-        'render',
-        'shader',
-        'gradient',
-        'palette',
-        'animation',
-        'resolution',
-        'opacity',
-    ],
-    3: [
-        'cat',
-        'sun',
-        'apple',
-        'hope',
-        'was',
-        'beach',
-        'chair',
-        'dog',
-        'elf',
-        'lover',
-        'fox',
-        'igloo',
-        'pixel',
-        'color',
-        'giraffe',
-        'ray',
-        'kind',
-        'lizard',
-        'muffin',
-        'nap',
-        'ostrich',
-        'pillow',
-        'queen',
-        'rizz',
-        'star',
-        'tea',
-        'unite',
-        'zen',
-        'lace',
-        'pool',
-        'blubber',
-        'chicken',
-        'really',
-        'joy',
-        'katie',
-        'andrew',
-        'genie',
-        'purple',
-        'banana',
-        'happy',
-        'guitar',
-        'basket',
-        'butter',
-        'planet',
-        'silver',
-        'laptop',
-        'monkey',
-        'orange',
-        'dragon',
-        'turtle',
-        'whisper',
-        'kangaroo',
-        'sparkle',
-        'render',
-        'shader',
-        'gradient',
-        'palette',
-        'animation',
-        'resolution',
-        'opacity',
-        'refraction',
-        'reflection',
-        'rasterization',
-        'polygon',
-        'ambient',
-        'diffuse',
-        'specular',
-        'mapping',
-        'blending',
-        'shadow',
-        'lighting',
-        'saturation',
-        'brightness',
-        'waterfall',
-        'renaissance',
-        'nostalgia',
-        'princeton',
-        'metamorphosis',
-        'astronomy',
-        'treasure',
-        'rainbow',
-        'disappear',
-        'encyclopedia',
-        'boulevard',
-        'gratitude',
-        'hemisphere',
-        'juxtapose',
-        'silhouette',
-        'entrepreneur',
-        'luminosity',
-    ],
-};
-
-const speeds = {
-    1: [0.5, 1],
-    2: [0.8, 1.5],
-    3: [1.2, 2],
-};
+import { Fruit, pickRandomFruitType } from 'objects';
+import { Vector3 } from 'three';
+import { Scene, Color } from 'three';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -201,119 +8,114 @@ function generateRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-class Game {
+class Game extends Scene {
     /**
      * Creates a pixel color.
      * @param {?number} lives - The number of lives (default 3).
      * @param {string[]} wordList - List of words for the game
      * @param {[number, number]} speedRange - (min, max) range of speeds for fruits
-     * @param {number} stage - What stage this game is {1, 2, 3}
+     * @param {number} stage - What stage this game is {0, 1, 2}
      */
     constructor(lives, wordList, speedRange, stage) {
+        super();
+
         // should not have negative lives
         if (lives == null || lives <= 0) {
             lives = 3;
         }
 
-        /**
-         * The current number of points.
-         * @type {number}
-         * @readonly
-         */
-        this.points = 0;
-
-        /**
-         * The current number of lives.
-         * @type {number}
-         * @readonly
-         */
-        this.lives = lives;
-
-        /**
-         * The current stage
-         * @type {number}
-         * @readonly
-         */
-        this.stage = stage;
-
-        // for type annotation reference: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
-        /**
-         * The list of fruits.
-         * @type {Fruit[]}
-         * @readonly
-         */
-        this.fruits = [];
-
-        /**
-         * The current fruit being considered or null if no fruit right now
-         * @type {?Fruit}
-         * @readonly
-         */
-        this.currentFruit = null;
+        this.state = {
+            points: 0,
+            lives: lives,
+            stage: stage,
+            fruits: [],
+            startingLetter: {},
+            words: wordList,
+            currentFruit: null,
+            speedRange: speedRange,
+            updateList: [],
+        };
     }
 
     addFruit() {
         // get random index and word with unique letter
-        let val;
+        let idx;
         let word;
+        let attempts = 10;
 
         do {
-            val = Math.floor(Math.random() * words[this.stage].length);
-            word = words[this.stage][val];
-        } while (
-            this.startingLetter(word[0]) &&
-            this.startingLetter(word[0]) != 0
-        );
+            idx = Math.floor(Math.random() * this.state.words.length);
+            word = this.state.words[idx];
+            attempts--;
+        } while (attempts >= 0 && this.state.startingLetter[word.charAt(0)]);
 
         // update dict of starting letters
-        this.startingLetter[word[0]] = 1;
+        this.state.startingLetter[word.charAt(0)] = true;
 
         // randomize fruit speed
-        const speedX = generateRandom(
-            speeds[this.stage][0],
-            speeds[this.stage][1]
-        );
-        const speedY = generateRandom(
-            speeds[this.stage][0],
-            speeds[this.stage][1]
+        // reference: https://github.com/berkerol/typer/blob/master/typer.js
+        const speed = generateRandom(
+            this.state.speedRange[0],
+            this.state.speedRange[1]
         );
 
-        // TODO: randomize starting location of fruit;
-        // https://github.com/berkerol/typer/blob/master/typer.js
-        // const starting = generateRandom();
-        // const starting = [0, 0];
+        // deciding which side the fruit will spawn from
 
-        // TODO: Randomly choose fruit type, location
+        // placeholders for corner coordinates
+        const minX = -100;
+        const maxX = 100;
+        const minY = -100;
+        const maxY = 100;
 
-        this.fruits.append(
-            new Fruit(
-                this.fruits.length,
-                word,
-                Fruit.FruitType.APPLE,
-                starting,
-                speedX,
-                speedY
-            )
+        let x;
+        let y;
+        const side = Math.random();
+
+        // left
+        if (side < 0.35) {
+            x = minX;
+            y = generateRandom(minY, maxY);
+        }
+        // right
+        else if (side < 0.7) {
+            x = maxX;
+            y = generateRandom(minY, maxY);
+        } // bottom
+        else if (side < 0.85) {
+            x = generateRandom(minX, maxX);
+            y = minY;
+        } // top
+        else {
+            x = generateRandom(minX, maxX);
+            y = maxY;
+        }
+        const location = new Vector3(x, y, 0);
+        const norm = location.length();
+
+        let newFruit = new Fruit(
+            this.state.fruits.length,
+            word,
+            pickRandomFruitType(),
+            location,
+            (-x / norm) * speed,
+            (-y / norm) * speed
         );
+        this.state.fruits.push(newFruit);
+
+        console.log('New fruit', newFruit);
     }
 
-    removeFruit(id) {
+    removeFruit(fruit) {
         // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
-        this.fruits.splice(id, 1);
+        const id = fruit.id;
+        this.state.fruits.splice(id, 1);
 
         // re-index fruits
-        for (let i = 0; i < this.fruits.length; i++) {
-            this.fruits[i].id = i;
+        for (let i = 0; i < this.state.fruits.length; i++) {
+            this.state.fruits[i].id = i;
         }
-    }
 
-    moveFruits() {
-        for (const fruit of this.fruits) {
-            // frames not defined yet, so commented out
-            // if (!fruit.move(frames)) {
-            //     this.removeFruit();
-            // }
-        }
+        this.state.startingLetter[fruit.word.charAt(0)] = false;
     }
 
     /**
@@ -323,34 +125,75 @@ class Game {
     acceptLetter(letter) {
         letter = letter.toLowerCase();
         // no fruit right now
-        if (!this.currentFruit) {
-            if (this.fruits.length === 0) {
+        if (!this.state.currentFruit) {
+            if (this.state.fruits.length === 0) {
                 // do nothing if there's no fruits
                 return;
             }
 
-            for (const fruit of this.fruits) {
+            for (const fruit of this.state.fruits) {
                 // arbitrarily pick first seen.
                 // TODO: Prevent fruits from starting with the same letter
                 if (fruit.word.charAt(0) == letter) {
-                    this.currentFruit = fruit;
+                    this.state.currentFruit = fruit;
                     break;
                 }
             }
+
+            // if letter doesn't match anything, return
+            if (!this.state.currentFruit) {
+                return;
+            }
         }
 
-        let done = this.currentFruit.acceptLetter(letter);
+        let done = this.state.currentFruit.acceptLetter(letter);
 
         if (done) {
             console.log('Finished fruit', this.currentFruit);
 
-            this.removeFruit(this.currentFruit.id); // created a new method for removing fruit
+            this.removeFruit(this.state.currentFruit); // created a new method for removing fruit
 
-            this.currentFruit = null;
+            this.state.currentFruit = null;
 
             // TODO: More dynamic point allocation
-            this.points = this.points + 1;
+            this.state.points = this.state.points + 1;
         }
+    }
+    /**
+     * updates objects in game.
+     * @param {Fruit} fruit - The fruit in question
+     */
+    collisionWithNinja(fruit) {
+        // TODO: calculate
+        // random values for the bounding box
+        const ninjaMinX = 0;
+        const ninjaMaxX = 10;
+        const ninjaMinY = 0;
+        const ninjaMaxY = 10;
+
+        return (
+            (fruit.location[0] >= ninjaMinX ||
+                fruit.location[0] <= ninjaMaxX) &&
+            (fruit.location[1] >= ninjaMinY || fruit.location[1] >= ninjaMaxY)
+        );
+    }
+
+    /**
+     * updates objects in game.
+     * @param {number} time - The time elapsed in the game
+     */
+    update(time) {
+        for (const fruit of this.fruits) {
+            fruit.update(time);
+
+            // handle collisions with ninja
+            if (this.collisionWithNinja(fruit)) {
+                // remove fruit
+                this.removeFruit(fruit);
+                this.lives -= 1;
+            }
+        }
+        this.time = time;
     }
 }
 

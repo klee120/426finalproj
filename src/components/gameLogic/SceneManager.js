@@ -1,23 +1,17 @@
 import Game from './Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
 import { SeedScene } from 'scenes';
+import { WORDS, SPEEDS } from 'defines';
 
 class SceneManager {
     /**
      * Creates a new scene manager
      */
-    // constructor() {
-    //     this.camera = new PerspectiveCamera();
-    //     this.renderer = new WebGLRenderer({ antialias: true });
-    //     this.currentScene = new SeedScene();
-
-    //     this.game = new Game(lives);
-    // }
-
     constructor() {
         this.renderer = undefined;
         this.camera = undefined;
         this.currentScene = undefined;
+        this.stage = undefined;
 
         // this will replace currentScene as soon as I figure out the camera
         this.game = undefined;
@@ -33,8 +27,11 @@ class SceneManager {
         this.camera.near = 1;
         this.camera.far = 100;
 
+        this.stage = 0;
         // debugging for now
-        this.game = new Game(3);
+        let wordList = WORDS[this.stage];
+        let speedRange = SPEEDS[this.stage];
+        this.game = new Game(3, wordList, speedRange, this.stage);
     }
 
     // debugging code for now
@@ -53,6 +50,10 @@ class SceneManager {
         this.renderer.render(this.currentScene, this.camera);
 
         this.currentScene.update(time);
+
+        if (this.game.lives == 0) {
+            console.log('game over');
+        }
     }
 }
 
