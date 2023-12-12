@@ -1,1 +1,1 @@
-export { default as State } from './State.js';
+export { default as SceneManager } from './SceneManager.js';

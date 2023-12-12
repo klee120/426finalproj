@@ -7,41 +7,24 @@
  *
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
 // Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
-import { State } from 'gameLogic';
+import { SceneManager } from 'gameLogic';
 
-// Initialize core ThreeJS components
-const scene = new SeedScene();
-const camera = new PerspectiveCamera();
-const renderer = new WebGLRenderer({ antialias: true });
-
-// Set up camera
-camera.position.set(6, 3, -10);
-camera.lookAt(new Vector3(0, 0, 0));
+// Initialize scene manager
+SceneManager.init();
 
 // Set up renderer, canvas, and minor CSS adjustments
-renderer.setPixelRatio(window.devicePixelRatio);
-const canvas = renderer.domElement;
+SceneManager.renderer.setPixelRatio(window.devicePixelRatio);
+const canvas = SceneManager.renderer.domElement;
 canvas.style.display = 'block'; // Removes padding below canvas
 document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
 
-// Set up controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 16;
-controls.update();
-
 // Render loop
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 const onAnimationFrameHandler = (timeStamp) => {
-    controls.update();
-    renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    SceneManager.runScene(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -49,17 +32,18 @@ window.requestAnimationFrame(onAnimationFrameHandler);
 // Resize Handler
 const windowResizeHandler = () => {
     const { innerHeight, innerWidth } = window;
-    renderer.setSize(innerWidth, innerHeight);
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
+    SceneManager.renderer.setSize(innerWidth, innerHeight);
+    SceneManager.camera.aspect = innerWidth / innerHeight;
+    SceneManager.camera.updateProjectionMatrix();
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
 
 // Add game state
-const state = new State(3);
+
+// for now, debugging
 window.addEventListener(
     'keydown',
-    (event) => state.handleKeyDown(event),
+    (event) => SceneManager.debuggingKeyDown(event),
     false
 );
