@@ -1,1 +1,1 @@
-export { WORDS, SPEEDS } from './defines.js';
+export { STAGE_CONFIGS } from './defines.js';

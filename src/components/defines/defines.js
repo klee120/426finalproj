@@ -1,4 +1,7 @@
-export const WORDS = {
+import { Color } from 'three';
+import GameConfig from './GameConfig.js';
+
+const WORDS = {
     0: [
         'cat',
         'sun',
@@ -187,8 +190,14 @@ export const WORDS = {
     ],
 };
 
-export const SPEEDS = {
+const SPEEDS = {
     0: [0.5, 1],
     1: [0.8, 1.5],
     2: [1.2, 2],
+};
+
+export const STAGE_CONFIGS = {
+    0: new GameConfig(3, WORDS[0], [2, 3], [4, 6], new Color(0x7ec0ee)),
+    1: new GameConfig(3, WORDS[1], [1, 2], [4, 6], new Color(0xaec077)),
+    2: new GameConfig(3, WORDS[2], [0.5, 1.5], [4, 6], new Color(0xee7777)),
 };

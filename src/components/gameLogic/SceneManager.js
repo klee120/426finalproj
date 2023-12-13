@@ -1,6 +1,6 @@
 import Game from './Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
-import { WORDS, SPEEDS } from 'defines';
+import { STAGE_CONFIGS } from 'defines';
 
 class SceneManager {
     /**
@@ -25,36 +25,30 @@ class SceneManager {
         this.camera.near = 1;
         this.camera.far = 100;
 
-        this.stage = 0;
-        // debugging for now
-        let wordList = WORDS[this.stage];
-        let speedRange = SPEEDS[this.stage];
-        this.currentScene = new Game(
-            3,
-            wordList,
-            speedRange,
+        this.stage = 2;
+        this.game = new Game(
+            STAGE_CONFIGS[this.stage],
             this.stage,
             this.camera
         );
-        this.game = this.currentScene;
     }
 
     // debugging code for now
-    debuggingKeyDown(event) {
-        if (event.key === 'Control') {
+    keyDown(event, debug) {
+        if (debug && event.key === 'Control') {
             this.game.addFruit();
-        } else if (event.key === 'Enter') {
+        } else if (debug && event.key === 'Enter') {
             console.log(this.game);
-        } else {
+        } else if (event.key.length == 1) {
             this.game && this.game.acceptLetter(event.key.toLowerCase());
         }
     }
 
     // renders and updates the current scene
     runScene(time) {
-        this.renderer.render(this.currentScene, this.camera);
+        this.renderer.render(this.game, this.camera);
 
-        this.currentScene.update(time);
+        this.game.update(time);
 
         if (this.game.lives <= 0) {
             console.log('game over');

@@ -48,9 +48,9 @@ window.addEventListener('resize', windowResizeHandler, false);
 
 // Add game state
 
-// for now, debugging
+const debug = true;
 window.addEventListener(
     'keydown',
-    (event) => SceneManager.debuggingKeyDown(event),
+    (event) => SceneManager.keyDown(event, debug),
     false
 );

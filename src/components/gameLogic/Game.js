@@ -15,15 +15,14 @@ const SPLAT_DISPLAY_TIME = 1;
 class Game extends Scene {
     /**
      * Creates a pixel color.
-     * @param {?number} lives - The number of lives (default 3).
-     * @param {string[]} wordList - List of words for the game
-     * @param {[number, number]} speedRange - (min, max) range of speeds for fruits
+     * @param {GameConfig} config - The game configs
      * @param {number} stage - What stage this game is {0, 1, 2}
      * @param {OrthographicCamera} camera - The camera; used to know where to spawn fruits
      */
-    constructor(lives, wordList, speedRange, stage, camera) {
+    constructor(config, stage, camera) {
         super();
 
+        let lives = config.lives;
         // should not have negative lives
         if (lives == null || lives <= 0) {
             lives = 3;
@@ -31,19 +30,23 @@ class Game extends Scene {
 
         this.points = 0;
         this.lives = lives;
-        this.stage = stage;
+        this.currentFruit = null;
         this.fruits = [];
 
         // keep track of splatted fruits so we can still display them
         this.splattedFruits = [];
+
+        // keep track of starting letters to prevent words with the same first letter
         this.startingLetter = {};
-        this.words = wordList;
-        this.currentFruit = null;
+
+        this.words = config.wordList;
+        this.secondsBetweenRange = config.secondsBetweenRange;
+        this.secondsAliveRange = config.secondsAliveRange;
 
         this.camera = camera;
 
         // Set background to a nice color
-        this.background = new Color(0x7ec0ee);
+        this.background = config.background;
 
         // Add meshes to scene
         // const land = new Land();
@@ -53,6 +56,8 @@ class Game extends Scene {
         this.ninja = ninja;
 
         this.add(lights, ninja);
+
+        this.nextFruitTime = performance.now() / 1000;
     }
 
     addFruit() {
@@ -110,7 +115,10 @@ class Game extends Scene {
             word,
             pickRandomFruitType(),
             position,
-            5,
+            generateRandom(
+                this.secondsAliveRange[0],
+                this.secondsAliveRange[1]
+            ),
             performance.now() / 1000
         );
         this.fruits.push(newFruit);
@@ -199,6 +207,16 @@ class Game extends Scene {
     update(time) {
         // Make ninja face current Fruit
         this.ninja.update(time);
+
+        // add fruit if necessary
+        if (time > this.nextFruitTime) {
+            this.addFruit();
+            const timeUntilNext = generateRandom(
+                this.secondsBetweenRange[0],
+                this.secondsBetweenRange[1]
+            );
+            this.nextFruitTime = time + timeUntilNext;
+        }
 
         for (const fruit of this.fruits) {
             fruit.update(time);
