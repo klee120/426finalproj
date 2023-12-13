@@ -21,6 +21,8 @@ document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
 
+// document.body.style.backgroundImage = Dojo;
+
 // Render loop
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 const onAnimationFrameHandler = (timeStamp) => {
