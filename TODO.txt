@@ -1,0 +1,6 @@
+Make level configs
+- Speed
+- Number of fruits needed
+- How often each fruit comes
+- background color
+- text color

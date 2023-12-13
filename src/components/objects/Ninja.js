@@ -1,6 +1,8 @@
 import { Group, Vector3, TextureLoader, SpriteMaterial, Sprite } from 'three';
 import { NINJA_SPRITES } from 'sprites';
 
+const TIME_BEFORE_FRONT = 0.5;
+
 export class Ninja extends Group {
     // Enum of ninja positions
     // Reference: https://www.sohamkamani.com/javascript/enums/
@@ -30,6 +32,8 @@ export class Ninja extends Group {
 
         this.currentSprite = this.front;
         this.add(this.currentSprite);
+
+        this.lastPositionChange = performance.now();
     }
 
     getSprite(textureLoader, asset) {
@@ -71,5 +75,17 @@ export class Ninja extends Group {
         this.remove(this.currentSprite);
         this.add(newSprite);
         this.currentSprite = newSprite;
+        this.lastPositionChange = performance.now() / 1000;
+    }
+
+    update(time) {
+        if (
+            this.currentSprite != this.front &&
+            time - this.lastPositionChange > TIME_BEFORE_FRONT
+        ) {
+            this.remove(this.currentSprite);
+            this.currentSprite = this.front;
+            this.add(this.front);
+        }
     }
 }

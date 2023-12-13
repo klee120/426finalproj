@@ -162,7 +162,7 @@ class Game extends Scene {
                 return;
             }
         }
-
+        this.ninja.changePosition(this.currentFruit.position.clone());
         let done = this.currentFruit.acceptLetter(letter);
 
         if (done) {
@@ -197,24 +197,17 @@ class Game extends Scene {
      * @param {number} time - The time elapsed in the game in seconds
      */
     update(time) {
-        // Make ninja face
-        if (this.currentFruit) {
-            this.ninja.changePosition(this.currentFruit.position.clone());
-        }
+        // Make ninja face current Fruit
+        this.ninja.update(time);
 
         for (const fruit of this.fruits) {
             fruit.update(time);
 
             // handle collisions with ninja
             if (this.collisionWithNinja(fruit, time)) {
-                // remove fruit
-                console.log('Collision', fruit);
-
                 if (this.currentFruit === fruit) {
                     this.currentFruit = null;
                 }
-
-                console.log(fruit);
 
                 this.removeFruit(fruit);
                 this.lives -= 1;

@@ -3,6 +3,7 @@ import {
     Group,
     Mesh,
     MeshBasicMaterial,
+    ShapeGeometry,
     SpriteMaterial,
     Sprite,
     Texture,
@@ -48,68 +49,58 @@ export class Fruit extends Group {
         this.startingTime = startingTime;
 
         const textureLoader = new TextureLoader();
-        this.normalSprite = this.getSprite(
+        this.normalSprite = this.createSprite(
             textureLoader,
             fruitSprites.normalSprite
         );
 
-        this.splatSprite = this.getSprite(
+        this.splatSprite = this.createSprite(
             textureLoader,
             fruitSprites.splatSprite
         );
 
-        this.slashSprite = this.getSprite(textureLoader, Slash);
-
+        this.slashSprite = this.createSprite(textureLoader, Slash);
         this.add(this.normalSprite);
-        console.log(this.normalSprite);
+
         this.text = this.drawText(word);
-        console.log(this.text.position);
         this.add(this.text);
     }
 
-    // https://threejs.org/docs/#manual/en/introduction/Creating-text
-
+    // Reference: https://threejs.org/docs/#manual/en/introduction/Creating-text
+    // Reference: https://threejs.org/examples/#webgl_geometry_text_stroke
     drawText(message) {
         const fontLoader = new FontLoader();
         let font = fontLoader.parse(PixelFont);
-        const geometry = new TextGeometry(message, {
-            font: font,
-            size: 12,
-            height: 0,
-        });
+
+        const shapes = font.generateShapes(message, 6);
+        console.log(shapes);
+
+        const geometry = new ShapeGeometry(shapes);
+        geometry.computeBoundingBox();
+
+        // bounding box is (0, 0, 0), (x_max, y_max, z_max)
+        const xOffset = geometry.boundingBox.max.x / 2;
+        const yOffset = geometry.boundingBox.max.y / 2;
 
         const text = new Mesh(
             geometry,
-            new MeshBasicMaterial({ color: 0x000000 })
+            new MeshBasicMaterial({ color: 0xffffff })
         );
-        const textPosition = new Vector3(0, 0, 0);
+
+        // slightly above fruit in y direction
+        // above in z direction to make sure it's always visible
+        const textPosition = new Vector3(-xOffset, 5 - yOffset, 1);
         text.position.copy(textPosition);
 
-        return mesh;
+        return text;
     }
 
-    drawBox() {
-        const geometry = new BoxGeometry(1, 1, 1);
-        const material = new MeshBasicMaterial({ color: 0xffff00 });
-        const mesh = new Mesh(geometry, material);
-
-        return mesh;
-    }
-
-    getSprite(textureLoader, asset) {
+    createSprite(textureLoader, asset) {
         const map = textureLoader.load(asset);
         const material = new SpriteMaterial({ map: map });
         const sprite = new Sprite(material);
         sprite.scale.set(25, 25, 1);
         return sprite;
-    }
-
-    getWord() {
-        return this.word;
-    }
-
-    getPosition() {
-        return this.position;
     }
 
     getId() {
@@ -151,7 +142,7 @@ export class Fruit extends Group {
         this.splatTime = time;
 
         this.remove(this.normalSprite);
-        // this.text && this.remove(this.text);
+        this.text && this.remove(this.text);
         this.add(this.splatSprite);
     }
 
@@ -167,7 +158,5 @@ export class Fruit extends Group {
             currentTime - this.startingTime
         );
         this.position.copy(newPosition);
-        this.text &&
-            this.text.position.set(newPosition.add(new Vector3(0, 5, 0)));
     }
 }
