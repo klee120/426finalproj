@@ -162,10 +162,10 @@ class Game extends Scene {
                 return;
             }
         }
-        this.ninja.changePosition(this.currentFruit.position.clone());
         let done = this.currentFruit.acceptLetter(letter);
 
         if (done) {
+            this.ninja.changePosition(this.currentFruit.position.clone());
             console.log('Finished fruit', this.currentFruit);
 
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
