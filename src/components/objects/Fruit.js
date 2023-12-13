@@ -1,4 +1,4 @@
-import { Group } from 'three';
+import { Group, TextureLoader, SpriteMaterial, Sprite } from 'three';
 
 export class Fruit extends Group {
     /**
@@ -23,6 +23,31 @@ export class Fruit extends Group {
             speedX: speedX,
             speedY: speedY,
         };
+
+        const map = new TextureLoader().load(fruitType.sprite);
+        const material = new SpriteMaterial({
+            map: map,
+        });
+
+        const sprite = new Sprite(material);
+        sprite.scale.set(3, 3, 1);
+        this.add(sprite);
+    }
+
+    getWord() {
+        return this.state.word;
+    }
+
+    getLocation() {
+        return this.state.location;
+    }
+
+    getId() {
+        return this.state.id;
+    }
+
+    setId(id) {
+        this.state.id = id;
     }
 
     acceptLetter(letter) {

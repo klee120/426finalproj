@@ -19,7 +19,6 @@ class SceneManager {
 
     init() {
         this.renderer = new WebGLRenderer({ antialias: true });
-        this.currentScene = new SeedScene();
         this.camera = new OrthographicCamera();
 
         this.camera.position.set(0, 0, 10);
@@ -31,7 +30,8 @@ class SceneManager {
         // debugging for now
         let wordList = WORDS[this.stage];
         let speedRange = SPEEDS[this.stage];
-        this.game = new Game(3, wordList, speedRange, this.stage);
+        this.currentScene = new Game(3, wordList, speedRange, this.stage);
+        this.game = this.currentScene;
     }
 
     // debugging code for now
@@ -39,7 +39,7 @@ class SceneManager {
         if (event.key === 'Control') {
             this.game.addFruit();
         } else if (event.key === 'Enter') {
-            console.log(this.game);
+            console.log(this.game.state);
         } else {
             this.game && this.game.acceptLetter(event.key.toLowerCase());
         }

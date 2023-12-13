@@ -1,6 +1,7 @@
-import { Fruit, pickRandomFruitType } from 'objects';
+import { Land, Fruit, FRUIT_TYPES, pickRandomFruitType } from 'objects';
 import { Vector3 } from 'three';
 import { Scene, Color } from 'three';
+import { BasicLights } from 'lights';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -35,6 +36,15 @@ class Game extends Scene {
             speedRange: speedRange,
             updateList: [],
         };
+
+        // Set background to a nice color
+        this.background = new Color(0x7ec0ee);
+
+        // Add meshes to scene
+        // const land = new Land();
+        const lights = new BasicLights();
+
+        this.add(lights);
     }
 
     addFruit() {
@@ -101,21 +111,22 @@ class Game extends Scene {
             (-y / norm) * speed
         );
         this.state.fruits.push(newFruit);
+        this.add(newFruit);
 
         console.log('New fruit', newFruit);
     }
 
     removeFruit(fruit) {
         // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
-        const id = fruit.id;
+        const id = fruit.getId();
         this.state.fruits.splice(id, 1);
 
         // re-index fruits
         for (let i = 0; i < this.state.fruits.length; i++) {
-            this.state.fruits[i].id = i;
+            this.state.fruits[i].setId(i);
         }
 
-        this.state.startingLetter[fruit.word.charAt(0)] = false;
+        this.state.startingLetter[fruit.getWord().charAt(0)] = false;
     }
 
     /**
@@ -134,7 +145,7 @@ class Game extends Scene {
             for (const fruit of this.state.fruits) {
                 // arbitrarily pick first seen.
                 // TODO: Prevent fruits from starting with the same letter
-                if (fruit.word.charAt(0) == letter) {
+                if (fruit.getWord().charAt(0) == letter) {
                     this.state.currentFruit = fruit;
                     break;
                 }
@@ -149,7 +160,7 @@ class Game extends Scene {
         let done = this.state.currentFruit.acceptLetter(letter);
 
         if (done) {
-            console.log('Finished fruit', this.currentFruit);
+            console.log('Finished fruit', this.state.currentFruit);
 
             this.removeFruit(this.state.currentFruit); // created a new method for removing fruit
 
@@ -172,9 +183,10 @@ class Game extends Scene {
         const ninjaMaxY = 10;
 
         return (
-            (fruit.location[0] >= ninjaMinX ||
-                fruit.location[0] <= ninjaMaxX) &&
-            (fruit.location[1] >= ninjaMinY || fruit.location[1] >= ninjaMaxY)
+            (fruit.getLocation().x >= ninjaMinX ||
+                fruit.getLocation().x <= ninjaMaxX) &&
+            (fruit.getLocation().y >= ninjaMinY ||
+                fruit.getLocation().y >= ninjaMaxY)
         );
     }
 
@@ -183,17 +195,18 @@ class Game extends Scene {
      * @param {number} time - The time elapsed in the game
      */
     update(time) {
-        for (const fruit of this.fruits) {
+        for (const fruit of this.state.fruits) {
             fruit.update(time);
 
             // handle collisions with ninja
             if (this.collisionWithNinja(fruit)) {
                 // remove fruit
-                this.removeFruit(fruit);
-                this.lives -= 1;
+                // console.log('Collision', fruit);
+                // this.removeFruit(fruit);
+                // this.state.lives -= 1;
             }
         }
-        this.time = time;
+        // this.state.time = time;
     }
 }
 

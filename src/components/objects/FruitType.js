@@ -1,3 +1,5 @@
+import { Apple } from 'sprites';
+
 class FruitType {
     constructor(name, sprite, splatSprite) {
         this.name = name;
@@ -9,9 +11,9 @@ class FruitType {
 // Enum of fruit types
 // Reference: https://www.sohamkamani.com/javascript/enums/
 
-const FRUIT_TYPES = [
-    new FruitType('apple', 'apple.png', 'apple-straw-splat.png'),
-    new FruitType('orange', 'orange.png', 'orange-splat.png'),
+export const FRUIT_TYPES = [
+    new FruitType('apple', Apple, 'apple-straw-splat.png'),
+    // new FruitType('orange', 'orange.png', 'orange-splat.png'),
 ];
 
 export function pickRandomFruitType() {
