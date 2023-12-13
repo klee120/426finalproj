@@ -78,13 +78,13 @@ export class Fruit extends Group {
 
         const shapes = font.generateShapes(message, 6);
         const materials = [];
+        const completed = new MeshBasicMaterial({ color: 0x808080 });
+        const normal = new MeshBasicMaterial({ color: 0xffffff });
         for (let i = 0; i < shapes.length; i++) {
             if (i < numShapesCompleted) {
-                const mat = new MeshBasicMaterial({ color: 0x808080 });
-                materials.push(mat);
+                materials.push(completed);
             } else {
-                const mat = new MeshBasicMaterial({ color: 0xffffff });
-                materials.push(mat);
+                materials.push(normal);
             }
         }
 
