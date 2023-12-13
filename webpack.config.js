@@ -42,6 +42,7 @@ module.exports = {
             gameLogic$: path.resolve(__dirname, 'src/components/gameLogic'),
             defines$: path.resolve(__dirname, 'src/components/defines'),
             sprites$: path.resolve(__dirname, 'src/components/sprites'),
+            fonts$: path.resolve(__dirname, 'src/components/fonts'),
         },
     },
     plugins: [

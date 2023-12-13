@@ -1,13 +1,16 @@
-import { Land, Fruit, FRUIT_TYPES, pickRandomFruitType } from 'objects';
+import { Fruit, pickRandomFruitType, Ninja } from 'objects';
 import { Vector3 } from 'three';
 import { Scene, Color } from 'three';
 import { BasicLights } from 'lights';
+import { OrthographicCamera } from 'three';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
 function generateRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+const SPLAT_DISPLAY_TIME = 1;
 
 class Game extends Scene {
     /**
@@ -16,8 +19,9 @@ class Game extends Scene {
      * @param {string[]} wordList - List of words for the game
      * @param {[number, number]} speedRange - (min, max) range of speeds for fruits
      * @param {number} stage - What stage this game is {0, 1, 2}
+     * @param {OrthographicCamera} camera - The camera; used to know where to spawn fruits
      */
-    constructor(lives, wordList, speedRange, stage) {
+    constructor(lives, wordList, speedRange, stage, camera) {
         super();
 
         // should not have negative lives
@@ -25,17 +29,18 @@ class Game extends Scene {
             lives = 3;
         }
 
-        this.state = {
-            points: 0,
-            lives: lives,
-            stage: stage,
-            fruits: [],
-            startingLetter: {},
-            words: wordList,
-            currentFruit: null,
-            speedRange: speedRange,
-            updateList: [],
-        };
+        this.points = 0;
+        this.lives = lives;
+        this.stage = stage;
+        this.fruits = [];
+
+        // keep track of splatted fruits so we can still display them
+        this.splattedFruits = [];
+        this.startingLetter = {};
+        this.words = wordList;
+        this.currentFruit = null;
+
+        this.camera = camera;
 
         // Set background to a nice color
         this.background = new Color(0x7ec0ee);
@@ -43,8 +48,11 @@ class Game extends Scene {
         // Add meshes to scene
         // const land = new Land();
         const lights = new BasicLights();
+        const ninja = new Ninja(stage);
 
-        this.add(lights);
+        this.ninja = ninja;
+
+        this.add(lights, ninja);
     }
 
     addFruit() {
@@ -54,28 +62,24 @@ class Game extends Scene {
         let attempts = 10;
 
         do {
-            idx = Math.floor(Math.random() * this.state.words.length);
-            word = this.state.words[idx];
+            idx = Math.floor(Math.random() * this.words.length);
+            word = this.words[idx];
             attempts--;
-        } while (attempts >= 0 && this.state.startingLetter[word.charAt(0)]);
+        } while (attempts >= 0 && this.startingLetter[word.charAt(0)]);
 
         // update dict of starting letters
-        this.state.startingLetter[word.charAt(0)] = true;
+        this.startingLetter[word.charAt(0)] = true;
 
         // randomize fruit speed
         // reference: https://github.com/berkerol/typer/blob/master/typer.js
-        const speed = generateRandom(
-            this.state.speedRange[0],
-            this.state.speedRange[1]
-        );
 
         // deciding which side the fruit will spawn from
 
         // placeholders for corner coordinates
-        const minX = -100;
-        const maxX = 100;
-        const minY = -100;
-        const maxY = 100;
+        const minX = this.camera.left;
+        const maxX = this.camera.right;
+        const minY = this.camera.bottom;
+        const maxY = this.camera.top;
 
         let x;
         let y;
@@ -99,34 +103,36 @@ class Game extends Scene {
             x = generateRandom(minX, maxX);
             y = maxY;
         }
-        const location = new Vector3(x, y, 0);
-        const norm = location.length();
+        const position = new Vector3(x, y, 0);
 
         let newFruit = new Fruit(
-            this.state.fruits.length,
+            this.fruits.length,
             word,
             pickRandomFruitType(),
-            location,
-            (-x / norm) * speed,
-            (-y / norm) * speed
+            position,
+            5,
+            performance.now() / 1000
         );
-        this.state.fruits.push(newFruit);
+        this.fruits.push(newFruit);
         this.add(newFruit);
 
-        console.log('New fruit', newFruit);
+        console.log('New fruit:', newFruit.word, newFruit);
     }
 
     removeFruit(fruit) {
-        // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
         const id = fruit.getId();
-        this.state.fruits.splice(id, 1);
+
+        // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
+        this.fruits.splice(id, 1);
 
         // re-index fruits
-        for (let i = 0; i < this.state.fruits.length; i++) {
-            this.state.fruits[i].setId(i);
+        for (let i = 0; i < this.fruits.length; i++) {
+            this.fruits[i].setId(i);
         }
 
-        this.state.startingLetter[fruit.getWord().charAt(0)] = false;
+        this.startingLetter[fruit.word.charAt(0)] = false;
+        fruit.splat(performance.now() / 1000);
+        this.splattedFruits.push(fruit);
     }
 
     /**
@@ -136,77 +142,94 @@ class Game extends Scene {
     acceptLetter(letter) {
         letter = letter.toLowerCase();
         // no fruit right now
-        if (!this.state.currentFruit) {
-            if (this.state.fruits.length === 0) {
+        if (!this.currentFruit) {
+            if (this.fruits.length === 0) {
                 // do nothing if there's no fruits
                 return;
             }
 
-            for (const fruit of this.state.fruits) {
+            for (const fruit of this.fruits) {
                 // arbitrarily pick first seen.
                 // TODO: Prevent fruits from starting with the same letter
-                if (fruit.getWord().charAt(0) == letter) {
-                    this.state.currentFruit = fruit;
+                if (fruit.word.charAt(0) == letter) {
+                    this.currentFruit = fruit;
                     break;
                 }
             }
 
             // if letter doesn't match anything, return
-            if (!this.state.currentFruit) {
+            if (!this.currentFruit) {
                 return;
             }
         }
 
-        let done = this.state.currentFruit.acceptLetter(letter);
+        let done = this.currentFruit.acceptLetter(letter);
 
         if (done) {
-            console.log('Finished fruit', this.state.currentFruit);
+            console.log('Finished fruit', this.currentFruit);
 
-            this.removeFruit(this.state.currentFruit); // created a new method for removing fruit
+            this.removeFruit(this.currentFruit); // created a new method for removing fruit
+            this.currentFruit.addSlash(
+                // add 1 to z position to superimpose on top of other sprite
+                this.currentFruit.position.clone().set(2, 1)
+            );
 
-            this.state.currentFruit = null;
+            this.currentFruit = null;
 
             // TODO: More dynamic point allocation
-            this.state.points = this.state.points + 1;
+            this.points = this.points + 1;
         }
     }
+
     /**
      * updates objects in game.
      * @param {Fruit} fruit - The fruit in question
+     * @param {number} time - The current time, in seconds
      */
-    collisionWithNinja(fruit) {
+    collisionWithNinja(fruit, time) {
         // TODO: calculate
         // random values for the bounding box
-        const ninjaMinX = 0;
-        const ninjaMaxX = 10;
-        const ninjaMinY = 0;
-        const ninjaMaxY = 10;
-
-        return (
-            (fruit.getLocation().x >= ninjaMinX ||
-                fruit.getLocation().x <= ninjaMaxX) &&
-            (fruit.getLocation().y >= ninjaMinY ||
-                fruit.getLocation().y >= ninjaMaxY)
-        );
+        return time - fruit.startingTime > fruit.secondsAlive;
     }
 
     /**
      * updates objects in game.
-     * @param {number} time - The time elapsed in the game
+     * @param {number} time - The time elapsed in the game in seconds
      */
     update(time) {
-        for (const fruit of this.state.fruits) {
+        // Make ninja face
+        if (this.currentFruit) {
+            this.ninja.changePosition(this.currentFruit.position.clone());
+        }
+
+        for (const fruit of this.fruits) {
             fruit.update(time);
 
             // handle collisions with ninja
-            if (this.collisionWithNinja(fruit)) {
+            if (this.collisionWithNinja(fruit, time)) {
                 // remove fruit
-                // console.log('Collision', fruit);
-                // this.removeFruit(fruit);
-                // this.state.lives -= 1;
+                console.log('Collision', fruit);
+
+                if (this.currentFruit === fruit) {
+                    this.currentFruit = null;
+                }
+
+                console.log(fruit);
+
+                this.removeFruit(fruit);
+                this.lives -= 1;
             }
         }
-        // this.state.time = time;
+
+        let filteredSplattedFruits = [];
+        for (const splatted of this.splattedFruits) {
+            if (time - splatted.splatTime > SPLAT_DISPLAY_TIME) {
+                this.remove(splatted);
+            } else {
+                filteredSplattedFruits.push(splatted);
+            }
+        }
+        this.splattedFruits = filteredSplattedFruits;
     }
 }
 

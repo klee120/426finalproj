@@ -24,7 +24,8 @@ document.body.appendChild(canvas);
 // Render loop
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 const onAnimationFrameHandler = (timeStamp) => {
-    SceneManager.runScene(timeStamp);
+    // divide by 1000 to get seconds
+    SceneManager.runScene(timeStamp / 1000);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -32,8 +33,14 @@ window.requestAnimationFrame(onAnimationFrameHandler);
 // Resize Handler
 const windowResizeHandler = () => {
     const { innerHeight, innerWidth } = window;
+    const ratio = innerHeight / innerWidth;
+
     SceneManager.renderer.setSize(innerWidth, innerHeight);
-    SceneManager.camera.aspect = innerWidth / innerHeight;
+    SceneManager.camera.left = -100;
+    SceneManager.camera.right = 100;
+    SceneManager.camera.bottom = -100 * ratio;
+    SceneManager.camera.top = 100 * ratio;
+
     SceneManager.camera.updateProjectionMatrix();
 };
 windowResizeHandler();

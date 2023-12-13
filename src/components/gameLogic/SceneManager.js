@@ -1,6 +1,5 @@
 import Game from './Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
-import { SeedScene } from 'scenes';
 import { WORDS, SPEEDS } from 'defines';
 
 class SceneManager {
@@ -30,7 +29,13 @@ class SceneManager {
         // debugging for now
         let wordList = WORDS[this.stage];
         let speedRange = SPEEDS[this.stage];
-        this.currentScene = new Game(3, wordList, speedRange, this.stage);
+        this.currentScene = new Game(
+            3,
+            wordList,
+            speedRange,
+            this.stage,
+            this.camera
+        );
         this.game = this.currentScene;
     }
 
@@ -39,7 +44,7 @@ class SceneManager {
         if (event.key === 'Control') {
             this.game.addFruit();
         } else if (event.key === 'Enter') {
-            console.log(this.game.state);
+            console.log(this.game);
         } else {
             this.game && this.game.acceptLetter(event.key.toLowerCase());
         }
@@ -51,7 +56,7 @@ class SceneManager {
 
         this.currentScene.update(time);
 
-        if (this.game.lives == 0) {
+        if (this.game.lives <= 0) {
             console.log('game over');
         }
     }
