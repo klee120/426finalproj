@@ -63,8 +63,6 @@ export class Fruit extends Group {
         this.add(this.normalSprite);
         console.log(this.normalSprite);
         this.text = this.drawText(word);
-        console.log(this.text);
-        console.log(this.text.position);
         console.log(this.text.position);
         this.add(this.text);
     }
@@ -87,45 +85,15 @@ export class Fruit extends Group {
         const textPosition = new Vector3(0, 0, 0);
         text.position.copy(textPosition);
 
-        return text;
+        return mesh;
     }
 
-    makeTextSprite(message, options = {}) {
-        let fontFamily = options.fontFamily || 'Courier New';
-        let fontSize = 48;
+    drawBox() {
+        const geometry = new BoxGeometry(1, 1, 1);
+        const material = new MeshBasicMaterial({ color: 0xffff00 });
+        const mesh = new Mesh(geometry, material);
 
-        let canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 128;
-
-        let context = canvas.getContext('2d');
-        context.font = `Bold ${fontSize}px ${fontFamily}`;
-        context.textAlign = 'center';
-        context.fillStyle = options.color || '#ffffff';
-        context.fillText(message, 256, fontSize);
-
-        // Canvas contents will be used for a texture
-        let texture = new Texture(canvas);
-        texture.needsUpdate = true;
-
-        let spriteMaterial = new SpriteMaterial({
-            map: texture,
-            sizeAttenuation: false,
-            depthWrite: false,
-            depthTest: false,
-        });
-
-        let sprite = new Sprite(spriteMaterial);
-        sprite.scale.set(0.3, 0.1, 1.0);
-        // sprite.layers.disable(0);
-        // sprite.layers.enable(renderCore.SPRITE_LAYER);
-        // if (options.renderOrder !== undefined) {
-        //     sprite.renderOrder = options.renderOrder;
-        // } else {
-        //     sprite.renderOrder = 1; // Defaults to 1 to resolve a render order issue with the water
-        // }
-
-        return sprite;
+        return mesh;
     }
 
     getSprite(textureLoader, asset) {
