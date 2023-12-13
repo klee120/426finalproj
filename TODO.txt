@@ -3,4 +3,9 @@ Make level configs
 - Number of fruits needed
 - How often each fruit comes
 - background color
-- text color
+- text/completed color
+
+Text
+- Change color when typing
+- Janky hack is to call font.shapes() or whatever, and use the length of the array
+  on a subset to figure out which half of the message should be colored

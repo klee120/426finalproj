@@ -12,7 +12,7 @@ import {
 } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import { PixelFont } from 'fonts';
+import { CourierFont } from 'fonts';
 import { Slash } from 'sprites';
 
 export class Fruit extends Group {
@@ -62,18 +62,31 @@ export class Fruit extends Group {
         this.slashSprite = this.createSprite(textureLoader, Slash);
         this.add(this.normalSprite);
 
-        this.text = this.drawText(word);
+        this.text = this.getTextSprite(word);
         this.add(this.text);
     }
 
     // Reference: https://threejs.org/docs/#manual/en/introduction/Creating-text
     // Reference: https://threejs.org/examples/#webgl_geometry_text_stroke
-    drawText(message) {
+    getTextSprite(message) {
         const fontLoader = new FontLoader();
-        let font = fontLoader.parse(PixelFont);
+        let font = fontLoader.parse(CourierFont);
+
+        let numShapesCompleted = font.generateShapes(
+            message.slice(0, this.currentWordIndex)
+        ).length;
 
         const shapes = font.generateShapes(message, 6);
-        console.log(shapes);
+        const materials = [];
+        for (let i = 0; i < shapes.length; i++) {
+            if (i < numShapesCompleted) {
+                const mat = new MeshBasicMaterial({ color: 0x808080 });
+                materials.push(mat);
+            } else {
+                const mat = new MeshBasicMaterial({ color: 0xffffff });
+                materials.push(mat);
+            }
+        }
 
         const geometry = new ShapeGeometry(shapes);
         geometry.computeBoundingBox();
@@ -82,10 +95,7 @@ export class Fruit extends Group {
         const xOffset = geometry.boundingBox.max.x / 2;
         const yOffset = geometry.boundingBox.max.y / 2;
 
-        const text = new Mesh(
-            geometry,
-            new MeshBasicMaterial({ color: 0xffffff })
-        );
+        const text = new Mesh(geometry, materials);
 
         // slightly above fruit in y direction
         // above in z direction to make sure it's always visible
@@ -147,7 +157,17 @@ export class Fruit extends Group {
     }
 
     /**
-     * Updates the location of the fruit based on the speed in the x and y direction
+     * Updates the text sprite to match the current word index
+     */
+    updateText() {
+        this.remove(this.text);
+        this.text = this.getTextSprite(this.word);
+        this.add(this.text);
+    }
+
+    /**
+     * Updates the location of the fruit based on the speed in the x and y direction.
+     * NOTE: Should only be called when fruit is still active (not splatted)
      * @param {number} time - A number representing the time elapsed in the game
      */
     update(currentTime) {
@@ -158,5 +178,6 @@ export class Fruit extends Group {
             currentTime - this.startingTime
         );
         this.position.copy(newPosition);
+        this.updateText();
     }
 }
