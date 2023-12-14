@@ -1,8 +1,8 @@
-import Game from './Game.js';
+import Game from '../scenes/Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
 import { STAGE_CONFIGS } from 'defines';
-import End from '../pages/end.js';
-import Start from '../pages/Start.js';
+import End from '../scenes/End.js';
+import Start from '../scenes/Start.js';
 
 class SceneManager {
     /**
@@ -39,8 +39,6 @@ class SceneManager {
 
     // renders and updates the current scene
     runScene(time) {
-        // debugger;
-        // console.log('Running scene', this.currentScene);
         this.renderer.render(this.currentScene, this.camera);
 
         if (this.game) {

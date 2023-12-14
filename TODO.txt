@@ -18,20 +18,4 @@ Todos:
     - One approach would be have some ENUMS for stages or the "intro screen" or
       "end" screen, and then pass in a "onLoss" and "onWin" enum into each game
 
-    Ex:
-
-    ... in SceneManager
-        const onWin = EnumGame(1);
-        const onLoss = EnumStart(1);
-        this.game = new Game(...., onWin, onLoss, this)
-
-    ... in Game
-        // constructor
-        this.parent = parent;
-        this.onLoss = onLoss;
-        this.onWin = onWin;
-        ....
-
-        // somewhere else (probably update), assume just lost
-        this.parent.transitionScene(this.onLoss);
         

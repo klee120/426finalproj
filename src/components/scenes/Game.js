@@ -142,8 +142,6 @@ class Game extends Scene {
         );
         this.fruits.push(newFruit);
         this.add(newFruit);
-
-        console.log('New fruit:', newFruit.word, newFruit);
     }
 
     removeFruit(fruit) {
@@ -193,7 +191,6 @@ class Game extends Scene {
 
         if (done) {
             this.ninja.changePosition(this.currentFruit.position.clone());
-            console.log('Finished fruit', this.currentFruit);
 
             // TODO: More dynamic point allocation
             this.points = this.points + this.currentFruit.word.length;
@@ -220,7 +217,7 @@ class Game extends Scene {
 
         const text = new Mesh(geometry, normal);
 
-        const textPosition = new Vector3(x, y, 0);
+        const textPosition = new Vector3(x, y, -1);
         text.position.copy(textPosition);
 
         return text;
