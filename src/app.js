@@ -6,10 +6,8 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 // Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
 import { SceneManager } from 'gameLogic';
-import * as pages from './components/gameLogic/pages.js';
 
 // Initialize scene manager
 SceneManager.init();
@@ -48,14 +46,3 @@ const windowResizeHandler = () => {
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
-
-// Add game state
-
-// // for now, debugging
-// window.addEventListener(
-//     'keydown',
-//     (event) => SceneManager.debuggingKeyDown(event),
-//     false
-// );
-
-// pages.end_game(document, 10)

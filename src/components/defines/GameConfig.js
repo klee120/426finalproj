@@ -6,7 +6,8 @@ class GameConfig {
         wordList,
         secondsBetweenRange,
         secondsAliveRange,
-        background
+        background,
+        pointsNeeded
     ) {
         this.lives = lives;
         this.wordList = wordList;
@@ -17,6 +18,8 @@ class GameConfig {
         } else {
             this.background = new Color(0x7ec0ee);
         }
+
+        this.pointsNeeded = pointsNeeded;
     }
 }
 

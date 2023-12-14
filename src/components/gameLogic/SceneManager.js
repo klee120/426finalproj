@@ -1,7 +1,6 @@
 import Game from './Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
 import { STAGE_CONFIGS } from 'defines';
-import * as pages from './pages.js';
 import End from '../pages/end.js';
 import Start from '../pages/Start.js';
 
@@ -30,54 +29,29 @@ class SceneManager {
         this.camera.far = 100;
 
         this.stage = 0;
-        // debugging for now
-        // let wordList = WORDS[this.stage];
+        this.game = undefined;
 
-        // this.currentScene = new Game(
-        //     3,
-        //     wordList,
-        //     speedRange,
-        //     this.stage,
-        //     this.camera
-        // );
-        // this.game = this.currentScene;
-
-        this.game = null;
-
-        this.start = new Start();
+        this.start = new Start(this);
         this.currentScene = this.start;
         this.currentScene.addEvents();
-        // this.scenes['start'] = new Start();
-        this.end = new End();
+        this.end = new End(this);
     }
-
-    // // debugging code for now
-    // debuggingKeyDown(event) {
-    //     if (event.key === 'Control') {
-    //         this.game.addFruit();
-    //     } else if (event.key === 'Enter') {
-    //         console.log(this.game);
-    //     } else {
-    //         this.game && this.game.acceptLetter(event.key.toLowerCase());
-    //     }
-    // }
 
     // renders and updates the current scene
     runScene(time) {
-        this.renderer.render(this.game, this.camera);
+        // debugger;
+        // console.log('Running scene', this.currentScene);
+        this.renderer.render(this.currentScene, this.camera);
 
-        if (this.game !== null) {
+        if (this.game) {
             this.currentScene.update(time);
             if (this.game.lives <= 0) {
                 console.log('level over.');
-                // pages.end_game(document, this.game.points);
                 this.currentScene.removeEvents();
                 this.currentScene = this.end;
                 this.currentScene.addEvents();
-                this.game = null;
-                // this.currentScene.addEvents();
-            }
-            if (this.game && this.game.points > 10) {
+                this.game = undefined;
+            } else if (this.game.cleared()) {
                 this.levelUp();
             }
         }
@@ -87,31 +61,37 @@ class SceneManager {
     levelUp() {
         if (this.stage === 2) {
             this.currentScene.removeEvents();
+            // TODO: Make this a "You win" scene
             this.currentScene = this.end;
             this.currentScene.addEvents();
-            console.log('game over');
+            console.log('You win');
             return;
         }
         this.stage += 1;
+
         console.log('level up! stage', this.stage);
-        let wordList = WORDS[this.stage];
-        let speedRange = SPEEDS[this.stage];
-        this.game = new Game(3, wordList, speedRange, this.stage, this.camera);
+
+        this.game = new Game(
+            STAGE_CONFIGS[this.stage],
+            this.stage,
+            this.camera
+        );
         this.currentScene = this.game;
         this.currentScene.addEvents();
     }
 
-    startGame() {
+    startOver() {
         this.currentScene.removeEvents();
-        let wordList = WORDS[this.stage];
-        let speedRange = SPEEDS[this.stage];
 
-        if ((this.currentScene = this.end)) {
-            this.stage = 0;
-        }
-        this.game = new Game(3, wordList, speedRange, this.stage, this.camera);
+        this.stage = 0;
+
+        this.game = new Game(
+            STAGE_CONFIGS[this.stage],
+            this.stage,
+            this.camera
+        );
+
         this.currentScene = this.game;
-        // this.stage += 1;
         this.currentScene.addEvents();
     }
 }

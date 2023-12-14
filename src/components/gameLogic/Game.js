@@ -44,6 +44,7 @@ class Game extends Scene {
         this.words = config.wordList;
         this.secondsBetweenRange = config.secondsBetweenRange;
         this.secondsAliveRange = config.secondsAliveRange;
+        this.pointsNeeded = config.pointsNeeded;
 
         this.camera = camera;
 
@@ -59,15 +60,29 @@ class Game extends Scene {
 
         this.add(lights, ninja);
 
-        this.nextFruitTime = performance.now() / 1000;
-
         this.keyDown = (event) => {
-            if (event.key === 'Control') {
-                this.addFruit();
-            } else {
+            if (event.key.length === 1) {
                 this.acceptLetter(event.key.toLowerCase());
             }
         };
+
+        const TIME_BEFORE_STARTING = 2000;
+        this.nextFruitTime = (TIME_BEFORE_STARTING + performance.now()) / 1000;
+
+        // TODO: Duh
+        const levelBanner = new Ninja(stage);
+        levelBanner.position.set(0, 10, 1);
+
+        this.add(levelBanner);
+
+        // Reference: https://masteringjs.io/tutorials/fundamentals/wait-1-second-then
+        new Promise((resolve) =>
+            setTimeout(resolve, TIME_BEFORE_STARTING)
+        ).then(() => this.remove(levelBanner));
+    }
+
+    cleared() {
+        return this.points >= this.pointsNeeded;
     }
 
     addFruit() {
@@ -85,12 +100,6 @@ class Game extends Scene {
         // update dict of starting letters
         this.startingLetter[word.charAt(0)] = true;
 
-        // randomize fruit speed
-        // reference: https://github.com/berkerol/typer/blob/master/typer.js
-
-        // deciding which side the fruit will spawn from
-
-        // placeholders for corner coordinates
         const minX = this.camera.left;
         const maxX = this.camera.right;
         const minY = this.camera.bottom;
@@ -187,8 +196,7 @@ class Game extends Scene {
             console.log('Finished fruit', this.currentFruit);
 
             // TODO: More dynamic point allocation
-            this.points =
-                this.points + this.currentFruit.word.length * (this.stage + 1);
+            this.points = this.points + this.currentFruit.word.length;
 
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
             this.currentFruit.addSlash(
@@ -200,34 +208,19 @@ class Game extends Scene {
         }
     }
 
-    getText(remove, message, x, y) {
-        this.remove(remove);
+    getText(message, x, y) {
         const fontLoader = new FontLoader();
         let font = fontLoader.parse(CourierFont);
 
-        let numShapesCompleted = font.generateShapes(
-            message.slice(0, this.currentWordIndex)
-        ).length;
-
         const shapes = font.generateShapes(message, 6);
-        const materials = [];
-        const completed = new MeshBasicMaterial({ color: 0x808080 });
         const normal = new MeshBasicMaterial({ color: 0xffffff });
-        for (let i = 0; i < shapes.length; i++) {
-            if (i < numShapesCompleted) {
-                materials.push(completed);
-            } else {
-                materials.push(normal);
-            }
-        }
 
         const geometry = new ShapeGeometry(shapes);
         geometry.computeBoundingBox();
 
-        const text = new Mesh(geometry, materials);
+        const text = new Mesh(geometry, normal);
 
-        // slightly above fruit in y direction
-        const textPosition = new Vector3(x, y, 1);
+        const textPosition = new Vector3(x, y, 0);
         text.position.copy(textPosition);
 
         return text;
@@ -286,32 +279,23 @@ class Game extends Scene {
         }
         this.splattedFruits = filteredSplattedFruits;
 
-        // TODO: FIX BOUNDS TO BE OF SCREEN
-        this.textScore = this.getText(
-            this.textScore,
-            'Score:' + this.points,
-            -95,
-            40
-        );
+        // TODO: FIX BOUNDS TO BE ON SCREEN
+
+        this.remove(this.textScore);
+        this.textScore = this.getText('Score:' + this.points, -95, 40);
         this.add(this.textScore);
 
-        this.textLives = this.getText(
-            this.textLives,
-            'Lives:' + this.lives,
-            -95,
-            30
-        );
+        this.remove(this.textLives);
+        this.textLives = this.getText('Lives:' + this.lives, -95, 30);
         this.add(this.textLives);
     }
 
     addEvents() {
-        // this.keyDown();
-        // for now, debugging
         window.addEventListener('keydown', this.keyDown, false);
     }
 
     removeEvents() {
-        window.addEventListener('keydown', this.keyDown, false);
+        window.removeEventListener('keydown', this.keyDown, false);
     }
 }
 

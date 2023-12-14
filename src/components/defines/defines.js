@@ -197,7 +197,14 @@ const SPEEDS = {
 };
 
 export const STAGE_CONFIGS = {
-    0: new GameConfig(3, WORDS[0], [2, 3], [4, 6], new Color(0x7ec0ee)),
-    1: new GameConfig(3, WORDS[1], [1, 2], [4, 6], new Color(0xaec077)),
-    2: new GameConfig(3, WORDS[2], [0.5, 1.5], [4, 6], new Color(0xee7777)),
+    0: new GameConfig(3, WORDS[0], [2, 3], [4, 6], new Color(0x7ec0ee), 100),
+    1: new GameConfig(3, WORDS[1], [1, 2], [4, 6], new Color(0xaec077), 250),
+    2: new GameConfig(
+        3,
+        WORDS[2],
+        [0.5, 1.5],
+        [4, 6],
+        new Color(0xee7777),
+        750
+    ),
 };
