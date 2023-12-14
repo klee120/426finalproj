@@ -73,10 +73,11 @@ class SceneManager {
                 // pages.end_game(document, this.game.points);
                 this.currentScene.removeEvents();
                 this.currentScene = this.end;
+                this.currentScene.addEvents();
                 this.game = null;
                 // this.currentScene.addEvents();
             }
-            if (this.game.points > 10) {
+            if (this.game && this.game.points > 10) {
                 this.levelUp();
             }
         }

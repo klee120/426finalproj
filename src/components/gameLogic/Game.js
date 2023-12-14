@@ -59,8 +59,6 @@ class Game extends Scene {
         this.keyDown = (event) => {
             if (event.key === 'Control') {
                 this.addFruit();
-            } else if (event.key === 'Enter') {
-                console.log("enter");
             } else {
                 this.acceptLetter(event.key.toLowerCase());
             }
