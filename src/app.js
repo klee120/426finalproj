@@ -9,6 +9,7 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 // Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
 import { SceneManager } from 'gameLogic';
+import * as pages from './components/gameLogic/pages.js';
 
 // Initialize scene manager
 SceneManager.init();
@@ -20,6 +21,8 @@ canvas.style.display = 'block'; // Removes padding below canvas
 document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
+
+// document.body.style.backgroundImage = Dojo;
 
 // Render loop
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
@@ -48,9 +51,11 @@ window.addEventListener('resize', windowResizeHandler, false);
 
 // Add game state
 
-const debug = true;
-window.addEventListener(
-    'keydown',
-    (event) => SceneManager.keyDown(event, debug),
-    false
-);
+// // for now, debugging
+// window.addEventListener(
+//     'keydown',
+//     (event) => SceneManager.debuggingKeyDown(event),
+//     false
+// );
+
+// pages.end_game(document, 10)

@@ -1,8 +1,10 @@
 import { Fruit, pickRandomFruitType, Ninja } from 'objects';
-import { Vector3 } from 'three';
+import { Mesh, Vector3, MeshBasicMaterial, ShapeGeometry } from 'three';
 import { Scene, Color } from 'three';
 import { BasicLights } from 'lights';
 import { OrthographicCamera } from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { CourierFont } from 'fonts';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -58,6 +60,14 @@ class Game extends Scene {
         this.add(lights, ninja);
 
         this.nextFruitTime = performance.now() / 1000;
+
+        this.keyDown = (event) => {
+            if (event.key === 'Control') {
+                this.addFruit();
+            } else {
+                this.acceptLetter(event.key.toLowerCase());
+            }
+        };
     }
 
     addFruit() {
@@ -176,6 +186,10 @@ class Game extends Scene {
             this.ninja.changePosition(this.currentFruit.position.clone());
             console.log('Finished fruit', this.currentFruit);
 
+            // TODO: More dynamic point allocation
+            this.points =
+                this.points + this.currentFruit.word.length * (this.stage + 1);
+
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
             this.currentFruit.addSlash(
                 // add 1 to z position to superimpose on top of other sprite
@@ -183,10 +197,40 @@ class Game extends Scene {
             );
 
             this.currentFruit = null;
-
-            // TODO: More dynamic point allocation
-            this.points = this.points + 1;
         }
+    }
+
+    getText(remove, message, x, y) {
+        this.remove(remove);
+        const fontLoader = new FontLoader();
+        let font = fontLoader.parse(CourierFont);
+
+        let numShapesCompleted = font.generateShapes(
+            message.slice(0, this.currentWordIndex)
+        ).length;
+
+        const shapes = font.generateShapes(message, 6);
+        const materials = [];
+        const completed = new MeshBasicMaterial({ color: 0x808080 });
+        const normal = new MeshBasicMaterial({ color: 0xffffff });
+        for (let i = 0; i < shapes.length; i++) {
+            if (i < numShapesCompleted) {
+                materials.push(completed);
+            } else {
+                materials.push(normal);
+            }
+        }
+
+        const geometry = new ShapeGeometry(shapes);
+        geometry.computeBoundingBox();
+
+        const text = new Mesh(geometry, materials);
+
+        // slightly above fruit in y direction
+        const textPosition = new Vector3(x, y, 1);
+        text.position.copy(textPosition);
+
+        return text;
     }
 
     /**
@@ -241,6 +285,33 @@ class Game extends Scene {
             }
         }
         this.splattedFruits = filteredSplattedFruits;
+
+        // TODO: FIX BOUNDS TO BE OF SCREEN
+        this.textScore = this.getText(
+            this.textScore,
+            'Score:' + this.points,
+            -95,
+            40
+        );
+        this.add(this.textScore);
+
+        this.textLives = this.getText(
+            this.textLives,
+            'Lives:' + this.lives,
+            -95,
+            30
+        );
+        this.add(this.textLives);
+    }
+
+    addEvents() {
+        // this.keyDown();
+        // for now, debugging
+        window.addEventListener('keydown', this.keyDown, false);
+    }
+
+    removeEvents() {
+        window.addEventListener('keydown', this.keyDown, false);
     }
 }
 
