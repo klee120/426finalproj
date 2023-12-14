@@ -282,11 +282,19 @@ class Game extends Scene {
         // TODO: FIX BOUNDS TO BE ON SCREEN
 
         this.remove(this.textScore);
-        this.textScore = this.getText('Score:' + this.points, -95, 40);
+        this.textScore = this.getText(
+            'Score:' + this.points,
+            this.camera.left + 5,
+            this.camera.top - 10
+        );
         this.add(this.textScore);
 
         this.remove(this.textLives);
-        this.textLives = this.getText('Lives:' + this.lives, -95, 30);
+        this.textLives = this.getText(
+            'Lives:' + this.lives,
+            this.camera.left + 5,
+            this.camera.top - 20
+        );
         this.add(this.textLives);
     }
 
