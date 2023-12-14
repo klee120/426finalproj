@@ -55,6 +55,16 @@ class Game extends Scene {
         this.ninja = ninja;
 
         this.add(lights, ninja);
+
+        this.keyDown = (event) => {
+            if (event.key === 'Control') {
+                this.addFruit();
+            } else if (event.key === 'Enter') {
+                console.log("enter");
+            } else {
+                this.acceptLetter(event.key.toLowerCase());
+            }
+        };
     }
 
     addFruit() {
@@ -171,7 +181,8 @@ class Game extends Scene {
             console.log('Finished fruit', this.currentFruit);
 
             // TODO: More dynamic point allocation
-            this.points = this.points + this.currentFruit.word.length * (this.stage + 1);
+            this.points =
+                this.points + this.currentFruit.word.length * (this.stage + 1);
 
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
             this.currentFruit.addSlash(
@@ -180,7 +191,6 @@ class Game extends Scene {
             );
 
             this.currentFruit = null;
-
         }
     }
 
@@ -261,11 +271,31 @@ class Game extends Scene {
         this.splattedFruits = filteredSplattedFruits;
 
         // TODO: FIX BOUNDS TO BE OF SCREEN
-        this.textScore = this.getText(this.textScore, 'Score:' + this.points, -95, 60);
+        this.textScore = this.getText(
+            this.textScore,
+            'Score:' + this.points,
+            -95,
+            40
+        );
         this.add(this.textScore);
 
-        this.textLives = this.getText(this.textLives, 'Lives:' + this.lives, -95, 50);
+        this.textLives = this.getText(
+            this.textLives,
+            'Lives:' + this.lives,
+            -95,
+            30
+        );
         this.add(this.textLives);
+    }
+
+    addEvents() {
+        // this.keyDown();
+        // for now, debugging
+        window.addEventListener('keydown', this.keyDown, false);
+    }
+
+    removeEvents() {
+        window.addEventListener('keydown', this.keyDown, false);
     }
 }
 

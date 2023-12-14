@@ -46,6 +46,8 @@ import Down_Left_Black from './down-left-black.png';
 
 export { default as Slash } from './slash.png';
 
+export { default as Dojo } from './dojo.jpg';
+
 export const APPLE_SPRITES = new FruitSprites('apple', Apple, AppleSplat);
 export const STRAW_SPRITES = new FruitSprites('straw', Straw, StrawSplat);
 export const LEMON_SPRITES = new FruitSprites('lemon', Lemon, LemonSplat);
