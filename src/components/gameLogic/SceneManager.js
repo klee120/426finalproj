@@ -2,6 +2,7 @@ import Game from '../scenes/Game.js';
 import { WebGLRenderer, OrthographicCamera, Vector3 } from 'three';
 import { STAGE_CONFIGS } from 'defines';
 import End from '../scenes/End.js';
+import Death from '../scenes/Death.js';
 import Start from '../scenes/Start.js';
 
 class SceneManager {
@@ -32,9 +33,11 @@ class SceneManager {
         this.game = undefined;
 
         this.start = new Start(this);
+        this.end = new End(this);
+        this.death = new Death(this);
+
         this.currentScene = this.start;
         this.currentScene.addEvents();
-        this.end = new End(this);
     }
 
     // renders and updates the current scene
@@ -46,7 +49,7 @@ class SceneManager {
             if (this.game.lives <= 0) {
                 console.log('level over.');
                 this.currentScene.removeEvents();
-                this.currentScene = this.end;
+                this.currentScene = this.death;
                 this.currentScene.addEvents();
                 this.game = undefined;
             } else if (this.game.cleared()) {
@@ -59,7 +62,7 @@ class SceneManager {
     levelUp() {
         if (this.stage === 2) {
             this.currentScene.removeEvents();
-            // TODO: Make this a "You win" scene
+            this.game = undefined;
             this.currentScene = this.end;
             this.currentScene.addEvents();
             console.log('You win');

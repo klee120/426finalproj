@@ -1,5 +1,5 @@
 import { Group, Vector3, TextureLoader, SpriteMaterial, Sprite } from 'three';
-import { NINJA_SPRITES } from 'sprites';
+import { NINJA_SPRITES, createSprite } from 'sprites';
 
 const TIME_BEFORE_FRONT = 0.5;
 
@@ -20,28 +20,29 @@ export class Ninja extends Group {
         const ninjaSprites = NINJA_SPRITES[level];
 
         const textureLoader = new TextureLoader();
-        this.front = this.getSprite(textureLoader, ninjaSprites.front);
-        this.down = this.getSprite(textureLoader, ninjaSprites.down);
-        this.right = this.getSprite(textureLoader, ninjaSprites.right);
-        this.left = this.getSprite(textureLoader, ninjaSprites.left);
-        this.up = this.getSprite(textureLoader, ninjaSprites.up);
-        this.upRight = this.getSprite(textureLoader, ninjaSprites.upRight);
-        this.upLeft = this.getSprite(textureLoader, ninjaSprites.upLeft);
-        this.downRight = this.getSprite(textureLoader, ninjaSprites.downRight);
-        this.downLeft = this.getSprite(textureLoader, ninjaSprites.downLeft);
+        const scale = new Vector3(25, 25, 1);
+        this.front = createSprite(textureLoader, ninjaSprites.front, scale);
+        this.down = createSprite(textureLoader, ninjaSprites.down, scale);
+        this.right = createSprite(textureLoader, ninjaSprites.right, scale);
+        this.left = createSprite(textureLoader, ninjaSprites.left, scale);
+        this.up = createSprite(textureLoader, ninjaSprites.up, scale);
+        this.upRight = createSprite(textureLoader, ninjaSprites.upRight, scale);
+        this.upLeft = createSprite(textureLoader, ninjaSprites.upLeft, scale);
+        this.downRight = createSprite(
+            textureLoader,
+            ninjaSprites.downRight,
+            scale
+        );
+        this.downLeft = createSprite(
+            textureLoader,
+            ninjaSprites.downLeft,
+            scale
+        );
 
         this.currentSprite = this.front;
         this.add(this.currentSprite);
 
         this.lastPositionChange = performance.now();
-    }
-
-    getSprite(textureLoader, asset) {
-        const map = textureLoader.load(asset);
-        const material = new SpriteMaterial({ map: map });
-        const sprite = new Sprite(material);
-        sprite.scale.set(25, 25, 1);
-        return sprite;
     }
 
     // calculates angle based on given fruit position + changes position

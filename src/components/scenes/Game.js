@@ -1,10 +1,11 @@
-import { Fruit, pickRandomFruitType, Ninja } from 'objects';
+import { Fruit, pickRandomFruitType, Ninja, Banner } from 'objects';
 import { Mesh, Vector3, MeshBasicMaterial, ShapeGeometry } from 'three';
-import { Scene, Color } from 'three';
+import { Scene } from 'three';
 import { BasicLights } from 'lights';
-import { OrthographicCamera } from 'three';
+import { OrthographicCamera, TextureLoader } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { CourierFont } from 'fonts';
+import { APPLE_SPRITES, createSprite } from 'sprites';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -66,18 +67,20 @@ class Game extends Scene {
             }
         };
 
-        const TIME_BEFORE_STARTING = 2000;
-        this.nextFruitTime = (TIME_BEFORE_STARTING + performance.now()) / 1000;
+        const MILLISECONDS_BEFORE_STARTING = 2000;
+        this.nextFruitTime =
+            (MILLISECONDS_BEFORE_STARTING + performance.now()) / 1000;
 
-        // TODO: Duh
-        const levelBanner = new Ninja(stage);
+        const levelBanner = new Banner(config.stageBanner);
+
+        // z position 1 so in front of ninja
         levelBanner.position.set(0, 10, 1);
 
         this.add(levelBanner);
 
         // Reference: https://masteringjs.io/tutorials/fundamentals/wait-1-second-then
         new Promise((resolve) =>
-            setTimeout(resolve, TIME_BEFORE_STARTING)
+            setTimeout(resolve, MILLISECONDS_BEFORE_STARTING)
         ).then(() => this.remove(levelBanner));
     }
 

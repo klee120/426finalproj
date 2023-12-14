@@ -1,19 +1,14 @@
 import {
-    BoxGeometry,
     Group,
     Mesh,
     MeshBasicMaterial,
     ShapeGeometry,
-    SpriteMaterial,
-    Sprite,
-    Texture,
     TextureLoader,
     Vector3,
 } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { CourierFont } from 'fonts';
-import { Slash } from 'sprites';
+import { Slash, createSprite } from 'sprites';
 
 export class Fruit extends Group {
     /**
@@ -49,17 +44,21 @@ export class Fruit extends Group {
         this.startingTime = startingTime;
 
         const textureLoader = new TextureLoader();
-        this.normalSprite = this.createSprite(
+        const scale = new Vector3(25, 25, 1);
+        this.normalSprite = createSprite(
             textureLoader,
-            fruitSprites.normalSprite
+            fruitSprites.normalSprite,
+            scale
         );
 
-        this.splatSprite = this.createSprite(
+        this.splatSprite = createSprite(
             textureLoader,
-            fruitSprites.splatSprite
+            fruitSprites.splatSprite,
+            scale
         );
 
-        this.slashSprite = this.createSprite(textureLoader, Slash);
+        this.slashSprite = createSprite(textureLoader, Slash, scale);
+
         this.add(this.normalSprite);
 
         this.text = this.getTextSprite(word);
@@ -103,14 +102,6 @@ export class Fruit extends Group {
         text.position.copy(textPosition);
 
         return text;
-    }
-
-    createSprite(textureLoader, asset) {
-        const map = textureLoader.load(asset);
-        const material = new SpriteMaterial({ map: map });
-        const sprite = new Sprite(material);
-        sprite.scale.set(25, 25, 1);
-        return sprite;
     }
 
     getId() {

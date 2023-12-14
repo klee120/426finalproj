@@ -1,15 +1,15 @@
 import { Scene, Color } from 'three';
-import { END_BANNER } from '../sprites';
+import { DEATH_BANNER } from '../sprites';
 import { Banner } from '../objects';
 
-class End extends Scene {
+class Death extends Scene {
     constructor(sceneManager) {
         // Call parent Scene() constructor
         super();
 
-        this.background = new Color(0xbaf8ba);
+        this.background = new Color(0x000000);
 
-        const banner = new Banner(END_BANNER);
+        const banner = new Banner(DEATH_BANNER);
         banner.position.set(0, 10, 0);
 
         this.add(banner);
@@ -31,4 +31,4 @@ class End extends Scene {
     }
 }
 
-export default End;
+export default Death;

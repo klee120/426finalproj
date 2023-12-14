@@ -7,7 +7,8 @@ class GameConfig {
         secondsBetweenRange,
         secondsAliveRange,
         background,
-        pointsNeeded
+        pointsNeeded,
+        stageBanner
     ) {
         this.lives = lives;
         this.wordList = wordList;
@@ -20,6 +21,7 @@ class GameConfig {
         }
 
         this.pointsNeeded = pointsNeeded;
+        this.stageBanner = stageBanner;
     }
 }
 

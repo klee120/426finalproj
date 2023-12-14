@@ -34,13 +34,20 @@ window.requestAnimationFrame(onAnimationFrameHandler);
 // Resize Handler
 const windowResizeHandler = () => {
     const { innerHeight, innerWidth } = window;
-    const ratio = innerHeight / innerWidth;
+
+    // make the smaller side length 100 in both directions
+    const widthRatio = 200 / innerWidth;
+    const heightRatio = 200 / innerHeight;
+    const ratio = Math.max(widthRatio, heightRatio);
+
+    const newWidth = innerWidth * ratio;
+    const newHeight = innerHeight * ratio;
 
     SceneManager.renderer.setSize(innerWidth, innerHeight);
-    SceneManager.camera.left = -100;
-    SceneManager.camera.right = 100;
-    SceneManager.camera.bottom = -100 * ratio;
-    SceneManager.camera.top = 100 * ratio;
+    SceneManager.camera.left = -newWidth / 2;
+    SceneManager.camera.right = newWidth / 2;
+    SceneManager.camera.bottom = -newHeight / 2;
+    SceneManager.camera.top = newHeight / 2;
 
     SceneManager.camera.updateProjectionMatrix();
 };

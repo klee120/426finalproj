@@ -1,20 +1,18 @@
 import { Scene, Vector3, OrthographicCamera, Color } from 'three';
+import { START_BANNER } from '../sprites';
+import { Banner } from '../objects';
 
 class Start extends Scene {
     constructor(sceneManager) {
         // Call parent Scene() constructor
         super();
 
-        // Camera
-        this.camera = new OrthographicCamera();
-
-        this.camera.position.set(0, 0, 10);
-        this.camera.lookAt(new Vector3(0, 0, 0));
-        this.camera.near = 1;
-        this.camera.far = 100;
-
-        // TODO: Add things (perhaps an image sprite with drawn text)
         this.background = new Color(0xc2baf8);
+
+        const banner = new Banner(START_BANNER);
+        banner.position.set(0, 10, 0);
+
+        this.add(banner);
 
         // event handler
         this.keyDown = (event) => {

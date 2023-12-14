@@ -1,3 +1,4 @@
+import { Sprite, SpriteMaterial } from 'three';
 import FruitSprites from './FruitSprites.js';
 import NinjaSprites from './NinjaSprites.js';
 
@@ -100,3 +101,18 @@ let ninjaBlack = new NinjaSprites(
 );
 
 export const NINJA_SPRITES = [ninjaWhite, ninjaRed, ninjaBlack];
+
+// TODO: Actually make pngs for this
+export const DEATH_BANNER = Down_Left_Black;
+export const START_BANNER = Down_Left_Red;
+export const END_BANNER = Down_Left_White;
+
+export const STAGE_BANNERS = [Apple, Straw, Watermelon];
+
+export function createSprite(textureLoader, asset, scale) {
+    const map = textureLoader.load(asset);
+    const material = new SpriteMaterial({ map: map });
+    const sprite = new Sprite(material);
+    sprite.scale.copy(scale);
+    return sprite;
+}
