@@ -32,6 +32,17 @@ module.exports = {
                 use: 'raw-loader',
                 exclude: path.resolve(__dirname, './node_modules/'),
             },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: 'html-loader',
+                        options: {
+                            minimize: true, // optional: enable minification
+                        },
+                    },
+                ],
+            },
         ],
     },
     resolve: {
