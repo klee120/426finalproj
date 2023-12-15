@@ -45,8 +45,10 @@ class SceneManager {
     runScene(time) {
         this.renderer.render(this.currentScene, this.camera);
 
+        // update if relevant
+        this.currentScene.update && this.currentScene.update(time);
+
         if (this.game) {
-            this.currentScene.update(time);
             if (this.game.lives <= 0) {
                 this.currentScene.removeEvents();
                 this.currentScene = this.death;
