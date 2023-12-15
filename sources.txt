@@ -1,2 +1,0 @@
-princetemon: https://github.com/stephanieyen/princetemon
-cave climber: https://github.com/Derndeff/cave-climber/

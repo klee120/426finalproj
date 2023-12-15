@@ -1,6 +1,6 @@
 ## Typing Ninja
 
-[Link text Here](https://link-url-here.org)
+[Online Demo](https://klee120.github.io/typing-ninja/)
 
 [REPORT](./typing_ninja_written_report.pdf)
 
