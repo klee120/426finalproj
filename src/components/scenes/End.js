@@ -16,12 +16,12 @@ import { AudioManager } from '../managers';
 
 const ALL_FRUITS = [
     APPLE_SPRITES,
-    STRAW_SPRITES,
     LEMON_SPRITES,
+    STRAW_SPRITES,
     ORANGE_SPRITES,
     LIME_SPRITES,
-    GRAPE_SPRITES,
     WATERMELON_SPRITES,
+    GRAPE_SPRITES,
 ];
 
 const ROTATION_PERIOD = 10;
