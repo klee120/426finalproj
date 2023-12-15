@@ -49,6 +49,8 @@ import Down_Left_Black from './down-left-black.png';
 import Slash from './slash.png';
 
 export { default as END_BANNER } from './end-banner.png';
+export { default as CREDITS_BANNER } from './credits.png';
+
 export { default as DEATH_BANNER } from './death-banner.png';
 
 export { default as START_BANNER } from './start-banner.png';

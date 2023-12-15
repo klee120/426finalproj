@@ -1,6 +1,7 @@
 import { Scene, Color, Vector3 } from 'three';
 import {
     END_BANNER,
+    CREDITS_BANNER,
     APPLE_SPRITES,
     STRAW_SPRITES,
     LEMON_SPRITES,
@@ -25,8 +26,8 @@ const ALL_FRUITS = [
 ];
 
 const ROTATION_PERIOD = 10;
-const NINJA_RADIUS = 20;
-const FRUIT_RADIUS = 70;
+const NINJA_RADIUS = 15;
+const FRUIT_RADIUS = 75;
 
 function getPosition(angle, radius) {
     return new Vector3(radius * Math.cos(angle), radius * Math.sin(angle), 0);
@@ -48,10 +49,14 @@ class End extends Scene {
 
         this.add(endBanner);
 
+        const creditsBanner = new Banner(CREDITS_BANNER);
+        creditsBanner.position.set(0, -35, 0);
+
+        this.add(creditsBanner);
+
         const scale = new Vector3(25, 25, 1);
         this.fruitBanners = [];
         for (let i = 0; i < ALL_FRUITS.length; i++) {
-            const angle = (Math.PI * 2 * i) / ALL_FRUITS.length;
             const fruitBanner = new Banner(ALL_FRUITS[i].normalSprite, scale);
             this.add(fruitBanner);
             this.fruitBanners.push(fruitBanner);
@@ -60,7 +65,7 @@ class End extends Scene {
 
         const ninjas = NINJA_SPRITES.map((value) => value);
         ninjas.push(HELPER_NINJA_SPRITES);
-        const offset = new Vector3(0, -10, 0);
+        const offset = new Vector3(0, 0, 0);
         for (let i = 0; i < ninjas.length; i++) {
             const angle = (Math.PI * 2 * i) / ninjas.length;
             const ninjaBaner = new Banner(ninjas[i].front, scale);

@@ -1,9 +1,9 @@
 {
-  "name": "426-final-proj",
+  "name": "typing-ninja",
   "repository": "426finalproj",
   "version": "0.1.0",
   "title": "Typing Ninja",
-  "description": "A typing game based around a ninja slicing fruits",
+  "description": "A typing game based around a ninja slicing fruits.",
   "keywords": [
     "Princeton",
     "graphics",

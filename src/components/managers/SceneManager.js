@@ -94,7 +94,7 @@ class SceneManager {
     }
 
     /**
-     * Resets the game to the start 
+     * Resets the game to the start
      */
     startOver() {
         this.currentScene.removeEvents();
@@ -107,6 +107,7 @@ class SceneManager {
      */
     startGames() {
         this.currentScene.removeEvents();
+        AudioManager.playSword();
 
         this.stage = 0;
 
