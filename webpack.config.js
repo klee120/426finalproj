@@ -50,7 +50,7 @@ module.exports = {
             lights$: path.resolve(__dirname, 'src/components/lights'),
             objects$: path.resolve(__dirname, 'src/components/objects'),
             scenes$: path.resolve(__dirname, 'src/components/scenes'),
-            gameLogic$: path.resolve(__dirname, 'src/components/gameLogic'),
+            managers$: path.resolve(__dirname, 'src/components/managers'),
             defines$: path.resolve(__dirname, 'src/components/defines'),
             sprites$: path.resolve(__dirname, 'src/components/sprites'),
             fonts$: path.resolve(__dirname, 'src/components/fonts'),

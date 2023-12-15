@@ -5,7 +5,7 @@ import { BasicLights } from 'lights';
 import { OrthographicCamera, TextureLoader } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { CourierFont } from 'fonts';
-import { AudioManager } from '../gameLogic';
+import { AudioManager } from '../managers';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max

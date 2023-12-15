@@ -8,7 +8,7 @@ import {
 } from '../sprites';
 import { Banner } from '../objects';
 
-import { AudioManager } from '../gameLogic';
+import { AudioManager } from '../managers';
 
 class Death extends Scene {
     constructor(sceneManager) {

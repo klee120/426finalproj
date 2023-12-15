@@ -12,7 +12,7 @@ import {
     HELPER_NINJA_SPRITES,
 } from 'sprites';
 import { Banner } from '../objects';
-import { AudioManager } from '../gameLogic';
+import { AudioManager } from '../managers';
 
 const ALL_FRUITS = [
     APPLE_SPRITES,

@@ -1,5 +1,5 @@
 import { AudioListener, Audio, AudioLoader } from 'three';
-import { SceneManager } from 'gameLogic';
+import { SceneManager } from 'managers';
 import {
     BackgroundAudio,
     DeathAudio,

@@ -7,7 +7,7 @@
  *
  */
 // Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
-import { SceneManager, AudioManager } from 'gameLogic';
+import { SceneManager, AudioManager } from 'managers';
 
 // Initialize scene manager
 SceneManager.init();
