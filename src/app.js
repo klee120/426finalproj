@@ -7,10 +7,11 @@
  *
  */
 // Reference: https://stackoverflow.com/questions/45995136/export-default-was-not-found
-import { SceneManager } from 'gameLogic';
+import { SceneManager, AudioManager } from 'gameLogic';
 
 // Initialize scene manager
 SceneManager.init();
+AudioManager.init();
 
 // Set up renderer, canvas, and minor CSS adjustments
 SceneManager.renderer.setPixelRatio(window.devicePixelRatio);
@@ -27,6 +28,8 @@ document.body.appendChild(canvas);
 const onAnimationFrameHandler = (timeStamp) => {
     // divide by 1000 to get seconds
     SceneManager.runScene(timeStamp / 1000);
+    AudioManager.update(timeStamp / 1000);
+
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);

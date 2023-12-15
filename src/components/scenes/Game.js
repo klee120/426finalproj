@@ -5,6 +5,7 @@ import { BasicLights } from 'lights';
 import { OrthographicCamera, TextureLoader } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { CourierFont } from 'fonts';
+import { AudioManager } from '../gameLogic';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -218,6 +219,7 @@ class Game extends Scene {
         let done = this.currentFruit.acceptLetter(letter);
 
         if (done) {
+            AudioManager.playSword();
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
 
             if (this.currentFruit.isHelper) {
@@ -309,6 +311,9 @@ class Game extends Scene {
             if (this.collisionWithNinja(fruit, time)) {
                 if (fruit.isHelper) {
                     this.hasHelper = false;
+                } else {
+                    // only play splat noise for fruits
+                    AudioManager.playSplat();
                 }
 
                 if (this.currentFruit === fruit) {

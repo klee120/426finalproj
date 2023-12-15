@@ -23,7 +23,7 @@ module.exports = {
                 exclude: path.resolve(__dirname, './node_modules/'),
             },
             {
-                test: /\.(jpe?g|png|gif|svg|tga|gltf|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
+                test: /\.(jpe?g|png|gif|svg|tga|gltf|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg|wav)$/i,
                 use: 'file-loader',
                 exclude: path.resolve(__dirname, './node_modules/'),
             },
@@ -54,6 +54,7 @@ module.exports = {
             defines$: path.resolve(__dirname, 'src/components/defines'),
             sprites$: path.resolve(__dirname, 'src/components/sprites'),
             fonts$: path.resolve(__dirname, 'src/components/fonts'),
+            audio$: path.resolve(__dirname, 'src/components/audio'),
         },
     },
     plugins: [

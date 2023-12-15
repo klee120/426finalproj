@@ -199,12 +199,12 @@ const SPEEDS = [
 
 export const STAGE_CONFIGS = [
     new GameConfig(
-        3,
+        1,
         WORDS[0],
         [2, 3],
         [4, 6],
         new Color(0x7ec0ee),
-        100,
+        3,
         STAGE_BANNERS[0]
     ),
     new GameConfig(
@@ -213,7 +213,7 @@ export const STAGE_CONFIGS = [
         [1, 2],
         [4, 6],
         new Color(0xaec077),
-        150,
+        3,
         STAGE_BANNERS[1]
     ),
     new GameConfig(
@@ -222,7 +222,7 @@ export const STAGE_CONFIGS = [
         [0.5, 1.5],
         [4, 6],
         new Color(0xee7777),
-        250,
+        3,
         STAGE_BANNERS[2]
     ),
 ];

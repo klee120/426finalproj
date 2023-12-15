@@ -4,6 +4,7 @@ import { STAGE_CONFIGS } from 'defines';
 import End from '../scenes/End.js';
 import Death from '../scenes/Death.js';
 import Start from '../scenes/Start.js';
+import { AudioManager } from './index.js';
 
 class SceneManager {
     /**
@@ -47,9 +48,9 @@ class SceneManager {
         if (this.game) {
             this.currentScene.update(time);
             if (this.game.lives <= 0) {
-                console.log('level over.');
                 this.currentScene.removeEvents();
                 this.currentScene = this.death;
+                AudioManager.switchBackgroundMusic(true);
                 this.death.updateStage();
                 this.currentScene.addEvents();
                 this.game = undefined;
@@ -61,18 +62,15 @@ class SceneManager {
 
     // for level ups
     levelUp() {
-        console.log(STAGE_CONFIGS.length);
         if (this.stage === STAGE_CONFIGS.length - 1) {
             this.currentScene.removeEvents();
             this.game = undefined;
             this.currentScene = this.end;
+            AudioManager.switchBackgroundMusic(false);
             this.currentScene.addEvents();
-            console.log('You win');
             return;
         }
         this.stage += 1;
-
-        console.log('level up! stage', this.stage);
 
         this.game = new Game(
             STAGE_CONFIGS[this.stage],

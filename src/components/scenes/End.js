@@ -12,6 +12,7 @@ import {
     HELPER_NINJA_SPRITES,
 } from 'sprites';
 import { Banner } from '../objects';
+import { AudioManager } from '../gameLogic';
 
 const ALL_FRUITS = [
     APPLE_SPRITES,
@@ -62,6 +63,7 @@ class End extends Scene {
         // event handler
         this.keyDown = (event) => {
             if (event.key === 'Enter') {
+                AudioManager.normalBackgroundMusic(false);
                 sceneManager.startOver();
             }
         };

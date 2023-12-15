@@ -8,6 +8,8 @@ import {
 } from '../sprites';
 import { Banner } from '../objects';
 
+import { AudioManager } from '../gameLogic';
+
 class Death extends Scene {
     constructor(sceneManager) {
         // Call parent Scene() constructor
@@ -44,6 +46,7 @@ class Death extends Scene {
         // event handler
         this.keyDown = (event) => {
             if (event.key === 'Enter') {
+                AudioManager.normalBackgroundMusic(true);
                 sceneManager.startOver();
             }
         };
