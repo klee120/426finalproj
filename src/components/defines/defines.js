@@ -202,7 +202,7 @@ export const STAGE_CONFIGS = [
         3,
         WORDS[0],
         [2, 3],
-        [4, 6],
+        [5, 6],
         new Color(0x7ec0ee),
         100,
         STAGE_BANNERS[0]
@@ -211,7 +211,7 @@ export const STAGE_CONFIGS = [
         3,
         WORDS[1],
         [1, 2],
-        [4, 6],
+        [4.5, 5.5],
         new Color(0xaec077),
         150,
         STAGE_BANNERS[1]
@@ -220,7 +220,7 @@ export const STAGE_CONFIGS = [
         3,
         WORDS[2],
         [0.5, 1.5],
-        [4, 6],
+        [4, 5],
         new Color(0xee7777),
         250,
         STAGE_BANNERS[2]
