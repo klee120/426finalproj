@@ -118,7 +118,7 @@ class Game extends Scene {
 
         const clearBanner = new Banner(
             StageClearBanner,
-            new Vector3(200, 200, 1)
+            new Vector3(100, 100, 1)
         );
         // z position 1 so in front of ninja
         clearBanner.position.set(0, 20, 1);
@@ -334,6 +334,8 @@ class Game extends Scene {
         const textPosition = new Vector3(x, y, -1);
         text.position.copy(textPosition);
 
+        text.message = message;
+
         return text;
     }
 
@@ -353,69 +355,78 @@ class Game extends Scene {
      * @param {number} time - The time elapsed in the game in seconds
      */
     update(time) {
-        // Make ninja face current Fruit
-        this.ninja.update(time);
+        // Game state should freeze when clear banner is showing
+        if (!this.isClearing) {
+            // Make ninja face current Fruit
+            this.ninja.update(time);
 
-        // add fruit if necessary
-        if (!this.isClearing && time > this.nextFruitTime) {
-            this.addFruit();
-            const timeUntilNext = generateRandom(
-                this.secondsBetweenRange[0],
-                this.secondsBetweenRange[1]
-            );
-            this.nextFruitTime = time + timeUntilNext;
-        }
+            // add fruit if necessary
+            if (time > this.nextFruitTime) {
+                this.addFruit();
+                const timeUntilNext = generateRandom(
+                    this.secondsBetweenRange[0],
+                    this.secondsBetweenRange[1]
+                );
+                this.nextFruitTime = time + timeUntilNext;
+            }
 
-        for (const fruit of this.fruits) {
-            fruit.update(time);
+            for (const fruit of this.fruits) {
+                fruit.update(time);
 
-            // handle collisions with ninja
-            if (this.collisionWithNinja(fruit, time)) {
-                if (fruit.isHelper) {
-                    this.hasHelper = false;
+                // handle collisions with ninja
+                if (this.collisionWithNinja(fruit, time)) {
+                    if (fruit.isHelper) {
+                        this.hasHelper = false;
+                    } else {
+                        // only play splat noise for fruits
+                        AudioManager.playSplat();
+                    }
+
+                    if (this.currentFruit === fruit) {
+                        this.currentFruit = null;
+                    }
+
+                    this.removeFruit(fruit, fruit.isHelper);
+
+                    // don't remove points for helper
+                    if (!fruit.isHelper) {
+                        this.lives -= 1;
+                    }
+                }
+            }
+
+            let filteredSplattedFruits = [];
+            for (const splatted of this.splattedFruits) {
+                if (time - splatted.splatTime > SPLAT_DISPLAY_TIME) {
+                    this.remove(splatted);
                 } else {
-                    // only play splat noise for fruits
-                    AudioManager.playSplat();
-                }
-
-                if (this.currentFruit === fruit) {
-                    this.currentFruit = null;
-                }
-
-                this.removeFruit(fruit, fruit.isHelper);
-
-                // don't remove points for helper
-                if (!fruit.isHelper) {
-                    this.lives -= 1;
+                    filteredSplattedFruits.push(splatted);
                 }
             }
+            this.splattedFruits = filteredSplattedFruits;
         }
 
-        let filteredSplattedFruits = [];
-        for (const splatted of this.splattedFruits) {
-            if (time - splatted.splatTime > SPLAT_DISPLAY_TIME) {
-                this.remove(splatted);
-            } else {
-                filteredSplattedFruits.push(splatted);
-            }
+        const scoreMessage = 'Score:' + this.points;
+        if (!this.textScore || this.textScore.message !== scoreMessage) {
+            this.remove(this.textScore);
+            this.textScore = this.getText(
+                'Score:' + this.points,
+                this.camera.left + 5,
+                this.camera.top - 10
+            );
+            this.add(this.textScore);
         }
-        this.splattedFruits = filteredSplattedFruits;
 
-        this.remove(this.textScore);
-        this.textScore = this.getText(
-            'Score:' + this.points,
-            this.camera.left + 5,
-            this.camera.top - 10
-        );
-        this.add(this.textScore);
-
-        this.remove(this.textLives);
-        this.textLives = this.getText(
-            'Lives:' + this.lives,
-            this.camera.left + 5,
-            this.camera.top - 20
-        );
-        this.add(this.textLives);
+        const livesMessage = 'Lives:' + this.lives;
+        if (!this.textLives || this.textLives.message !== livesMessage) {
+            this.remove(this.textLives);
+            this.textLives = this.getText(
+                'Lives:' + this.lives,
+                this.camera.left + 5,
+                this.camera.top - 20
+            );
+            this.add(this.textLives);
+        }
     }
 
     /**
