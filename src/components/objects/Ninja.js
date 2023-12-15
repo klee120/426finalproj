@@ -1,4 +1,4 @@
-import { Group, Vector3, TextureLoader, SpriteMaterial, Sprite } from 'three';
+import { Group, Vector3, TextureLoader } from 'three';
 import { NINJA_SPRITES, createSprite } from 'sprites';
 
 const TIME_BEFORE_FRONT = 0.5;

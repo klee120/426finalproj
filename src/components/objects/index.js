@@ -1,4 +1,4 @@
-export { Fruit } from './Fruit.js';
-export { pickRandomFruitType } from './FruitType.js';
+export { Fruit, pickRandomFruitSprites } from './Fruit.js';
+export { Helper } from './Helper.js';
 export { Ninja } from './Ninja.js';
 export { Banner } from './Banner.js';

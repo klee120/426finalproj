@@ -217,12 +217,12 @@ export const STAGE_CONFIGS = {
         STAGE_BANNERS[1]
     ),
     2: new GameConfig(
-        3,
+        10,
         WORDS[2],
         [0.5, 1.5],
         [4, 6],
         new Color(0xee7777),
-        5,
+        250,
         STAGE_BANNERS[2]
     ),
 };

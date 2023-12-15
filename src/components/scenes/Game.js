@@ -1,11 +1,10 @@
-import { Fruit, pickRandomFruitType, Ninja, Banner } from 'objects';
+import { Fruit, Helper, pickRandomFruitSprites, Ninja, Banner } from 'objects';
 import { Mesh, Vector3, MeshBasicMaterial, ShapeGeometry } from 'three';
 import { Scene } from 'three';
 import { BasicLights } from 'lights';
 import { OrthographicCamera, TextureLoader } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { CourierFont } from 'fonts';
-import { APPLE_SPRITES, createSprite } from 'sprites';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -82,6 +81,9 @@ class Game extends Scene {
         new Promise((resolve) =>
             setTimeout(resolve, MILLISECONDS_BEFORE_STARTING)
         ).then(() => this.remove(levelBanner));
+
+        // prevent multiple helpers on screen
+        this.hasHelper = false;
     }
 
     cleared() {
@@ -132,22 +134,38 @@ class Game extends Scene {
         }
         const position = new Vector3(x, y, 0);
 
-        let newFruit = new Fruit(
-            this.fruits.length,
-            word,
-            pickRandomFruitType(),
-            position,
-            generateRandom(
-                this.secondsAliveRange[0],
-                this.secondsAliveRange[1]
-            ),
-            performance.now() / 1000
-        );
+        let newFruit;
+        // give them a helper 50% of the time there's 3 or more fruits on screen
+        if (!this.hasHelper && this.fruits.length >= 3 && Math.random() < 0.5) {
+            newFruit = new Helper(
+                this.fruits.length,
+                word,
+                position,
+                generateRandom(
+                    this.secondsAliveRange[0],
+                    this.secondsAliveRange[1]
+                ),
+                performance.now() / 1000
+            );
+            this.hasHelper = true;
+        } else {
+            newFruit = new Fruit(
+                this.fruits.length,
+                word,
+                pickRandomFruitSprites(),
+                position,
+                generateRandom(
+                    this.secondsAliveRange[0],
+                    this.secondsAliveRange[1]
+                ),
+                performance.now() / 1000
+            );
+        }
         this.fruits.push(newFruit);
         this.add(newFruit);
     }
 
-    removeFruit(fruit) {
+    removeFruit(fruit, isHelper) {
         const id = fruit.getId();
 
         // Reference: https://stackoverflow.com/questions/2003815/how-to-remove-element-from-an-array-in-javascript
@@ -159,6 +177,13 @@ class Game extends Scene {
         }
 
         this.startingLetter[fruit.word.charAt(0)] = false;
+
+        if (isHelper) {
+            // don't splat collision with helper
+            this.remove(fruit);
+            return;
+        }
+
         fruit.splat(performance.now() / 1000);
         this.splattedFruits.push(fruit);
     }
@@ -193,19 +218,41 @@ class Game extends Scene {
         let done = this.currentFruit.acceptLetter(letter);
 
         if (done) {
-            this.ninja.changePosition(this.currentFruit.position.clone());
-
-            // TODO: More dynamic point allocation
-            this.points = this.points + this.currentFruit.word.length;
-
             this.removeFruit(this.currentFruit); // created a new method for removing fruit
-            this.currentFruit.addSlash(
-                // add 1 to z position to superimpose on top of other sprite
-                this.currentFruit.position.clone().set(2, 1)
-            );
+
+            if (this.currentFruit.isHelper) {
+                this.hasHelper = false;
+
+                // remove starting from the back for performance
+                for (let i = this.fruits.length - 1; i >= 0; i--) {
+                    this.points =
+                        this.points + this.calculatePoints(this.fruits[i]);
+                    this.fruits[i].addSlash(
+                        // add 1 to z position to superimpose on top of other sprite
+                        this.fruits[i].position.clone().set(2, 1)
+                    );
+
+                    this.removeFruit(this.fruits[i]);
+                }
+            } else {
+                this.ninja.changePosition(this.currentFruit.position.clone());
+
+                // TODO: More dynamic point allocation
+                this.points =
+                    this.points + this.calculatePoints(this.currentFruit);
+
+                this.currentFruit.addSlash(
+                    // add 1 to z position to superimpose on top of other sprite
+                    this.currentFruit.position.clone().set(2, 1)
+                );
+            }
 
             this.currentFruit = null;
         }
+    }
+
+    calculatePoints(fruit) {
+        return fruit.word.length;
     }
 
     getText(message, x, y) {
@@ -264,8 +311,12 @@ class Game extends Scene {
                     this.currentFruit = null;
                 }
 
-                this.removeFruit(fruit);
-                this.lives -= 1;
+                this.removeFruit(fruit, fruit.isHelper);
+
+                // don't remove points for helper
+                if (!this.isHelper) {
+                    this.lives -= 1;
+                }
             }
         }
 
@@ -278,8 +329,6 @@ class Game extends Scene {
             }
         }
         this.splattedFruits = filteredSplattedFruits;
-
-        // TODO: FIX BOUNDS TO BE ON SCREEN
 
         this.remove(this.textScore);
         this.textScore = this.getText(

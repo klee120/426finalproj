@@ -1,5 +1,6 @@
 import { Sprite, SpriteMaterial } from 'three';
 import FruitSprites from './FruitSprites.js';
+export { FruitSprites };
 import NinjaSprites from './NinjaSprites.js';
 
 import Apple from './apple.png';
@@ -44,8 +45,9 @@ import Up_Black from './up-black.png';
 import Up_Left_Black from './up-left-black.png';
 import Left_Black from './left-black.png';
 import Down_Left_Black from './down-left-black.png';
+import Slash from './slash.png';
 
-export { default as Slash } from './slash.png';
+export { Slash };
 
 export { default as Dojo } from './dojo.jpg';
 
@@ -60,6 +62,8 @@ export const WATERMELON_SPRITES = new FruitSprites(
     Watermelon,
     WatermelonSplat
 );
+
+export const BOMB_SPRITES = new FruitSprites('bomb', Front_Black, Slash);
 
 let ninjaWhite = new NinjaSprites(
     'white',
@@ -103,6 +107,20 @@ let ninjaBlack = new NinjaSprites(
 export const NINJA_SPRITES = [ninjaWhite, ninjaRed, ninjaBlack];
 
 // TODO: Actually make pngs for this
+
+export const HELPER_NINJA_SPRITES = new NinjaSprites(
+    'black',
+    Front_Black,
+    Down_Black,
+    Right_Black,
+    Left_Black,
+    Up_Black,
+    Up_Right_Black,
+    Up_Left_Black,
+    Down_Right_Black,
+    Down_Left_Black
+);
+
 export const DEATH_BANNER = Down_Left_Black;
 export const START_BANNER = Down_Left_Red;
 export const END_BANNER = Down_Left_White;
