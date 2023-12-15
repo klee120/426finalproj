@@ -2,6 +2,10 @@ import { Vector3, TextureLoader } from 'three';
 import { Fruit } from 'objects';
 import { FruitSprites, HELPER_NINJA_SPRITES, createSprite } from '../sprites';
 
+/**
+ * Gets the appropriate helper sprite 
+ * @param {Vector3} position - The position given
+ */
 function getSplatSprite(position) {
     position = position.clone().normalize();
 

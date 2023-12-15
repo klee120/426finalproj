@@ -8,7 +8,7 @@ import { AudioManager } from './index.js';
 
 class SceneManager {
     /**
-     * Creates a new scene manager
+     * Creates a SceneManager object
      */
     constructor() {
         this.renderer = undefined;
@@ -21,6 +21,9 @@ class SceneManager {
         this.document = document;
     }
 
+    /**
+     * Initializes properties
+     */
     init() {
         this.renderer = new WebGLRenderer({ antialias: true });
         this.camera = new OrthographicCamera();
@@ -41,7 +44,10 @@ class SceneManager {
         this.currentScene.addEvents();
     }
 
-    // renders and updates the current scene
+    /**
+     * Renders and updates the current scene
+     * @param {number} time - The time elapsed in the game in seconds
+     */
     runScene(time) {
         this.renderer.render(this.currentScene, this.camera);
 
@@ -64,7 +70,9 @@ class SceneManager {
         }
     }
 
-    // for level ups
+    /**
+     * Deals with level ups within game and changes scenes
+     */
     levelUp() {
         if (this.stage === STAGE_CONFIGS.length - 1) {
             this.currentScene.removeEvents();
@@ -85,12 +93,18 @@ class SceneManager {
         this.currentScene.addEvents();
     }
 
+    /**
+     * Resets the game to the start 
+     */
     startOver() {
         this.currentScene.removeEvents();
         this.currentScene = this.start;
         this.currentScene.addEvents();
     }
 
+    /**
+     * Starts the game from stage 0
+     */
     startGames() {
         this.currentScene.removeEvents();
 

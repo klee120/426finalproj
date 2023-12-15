@@ -1,8 +1,12 @@
-import { Scene, Vector3, OrthographicCamera, Color } from 'three';
+import { Scene, Vector3, Color } from 'three';
 import { TITLE_BANNER, START_BANNER, START_NINJA } from '../sprites';
 import { Banner } from '../objects';
 
 class Start extends Scene {
+    /**
+     * Creates a Game object
+     * @param {Object} sceneManager - The scene manager
+     */
     constructor(sceneManager) {
         // Call parent Scene() constructor
         super();
@@ -31,10 +35,16 @@ class Start extends Scene {
         };
     }
 
+    /**
+     * Adds event listeners needed for this scene.
+     */
     addEvents() {
         window.addEventListener('keydown', this.keyDown, false);
     }
 
+    /**
+     * Removes event listeners.
+     */
     removeEvents() {
         window.removeEventListener('keydown', this.keyDown, false);
     }

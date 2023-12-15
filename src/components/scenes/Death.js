@@ -11,6 +11,10 @@ import { Banner } from '../objects';
 import { AudioManager } from '../managers';
 
 class Death extends Scene {
+    /**
+     * Creates a Game object
+     * @param {Object} sceneManager - The scene manager
+     */
     constructor(sceneManager) {
         // Call parent Scene() constructor
         super();
@@ -52,6 +56,9 @@ class Death extends Scene {
         };
     }
 
+    /**
+     * Updates the stage
+     */
     updateStage() {
         this.remove(this.ninjaSprite);
         const scale = new Vector3(25, 25, 1);
@@ -62,11 +69,16 @@ class Death extends Scene {
         this.ninjaSprite.position.set(0, 0, 0);
         this.add(this.ninjaSprite);
     }
-
+    /**
+     * Adds event listeners needed for this scene.
+     */
     addEvents() {
         window.addEventListener('keydown', this.keyDown, false);
     }
 
+    /**
+     * Removes event listeners.
+     */
     removeEvents() {
         window.removeEventListener('keydown', this.keyDown, false);
     }

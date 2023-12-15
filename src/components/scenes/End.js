@@ -33,6 +33,10 @@ function getPosition(angle, radius) {
 }
 
 class End extends Scene {
+    /**
+     * Creates a Game object
+     * @param {Object} sceneManager - The scene manager
+     */
     constructor(sceneManager) {
         // Call parent Scene() constructor
         super();
@@ -75,6 +79,10 @@ class End extends Scene {
         };
     }
 
+    /**
+     * Updates objects in scene.
+     * @param {number} time - The time elapsed in the game in seconds
+     */
     update(time) {
         const time_offset = time % ROTATION_PERIOD;
         const angle_offset = (Math.PI * 2 * time_offset) / ROTATION_PERIOD;
@@ -88,10 +96,16 @@ class End extends Scene {
         }
     }
 
+    /**
+     * Adds event listeners needed for this scene.
+     */
     addEvents() {
         window.addEventListener('keydown', this.keyDown, false);
     }
 
+    /**
+     * Removes event listeners.
+     */
     removeEvents() {
         window.removeEventListener('keydown', this.keyDown, false);
     }

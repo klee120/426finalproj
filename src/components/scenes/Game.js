@@ -15,6 +15,11 @@ import { StageClearBanner } from '../sprites';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
+/**
+ * Generates a random number between min and max provided
+ * @param {number} min - the minimum value
+ * @param {number} max - the maximum value
+ */
 function generateRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
@@ -24,7 +29,7 @@ const MILLISECONDS_FOR_BANNER = 2000;
 
 class Game extends Scene {
     /**
-     * Creates a pixel color.
+     * Creates a Game object
      * @param {GameConfig} config - The game configs
      * @param {number} stage - What stage this game is {0, 1, 2}
      * @param {OrthographicCamera} camera - The camera; used to know where to spawn fruits
@@ -60,7 +65,6 @@ class Game extends Scene {
         this.background = config.background;
 
         // Add meshes to scene
-        // const land = new Land();
         const lights = new BasicLights();
         const ninja = new Ninja(stage);
 
@@ -93,10 +97,17 @@ class Game extends Scene {
         this.hasHelper = false;
     }
 
+    /**
+     * Checks whether the stage has been cleared
+     */
     metPointRequirement() {
         return this.points >= this.pointsNeeded;
     }
 
+    /**
+     * Start the process of marking the game as cleared. Finishes all fruits,
+     * and displays a completion banner. Sets this.isCleared after 2 seconds.
+     */
     clear() {
         // note this so we stop spawning fruits
         this.isClearing = true;
@@ -114,7 +125,6 @@ class Game extends Scene {
 
         this.add(clearBanner);
 
-        // Reference: https://masteringjs.io/tutorials/fundamentals/wait-1-second-then
         new Promise((resolve) =>
             setTimeout(resolve, MILLISECONDS_FOR_BANNER)
         ).then(() => {
@@ -122,6 +132,9 @@ class Game extends Scene {
         });
     }
 
+    /**
+     * Adds a fruit with a random speed, location, and fruit type
+     */
     addFruit() {
         // get random index and word with unique letter
         let idx;
@@ -137,6 +150,9 @@ class Game extends Scene {
         // update dict of starting letters
         this.startingLetter[word.charAt(0)] = true;
 
+        // randomly generate the fruit location, with increased probability of
+        // generating from the left and right sides due to the shortened
+        // nature of the vertical on the screen
         const minX = this.camera.left;
         const maxX = this.camera.right;
         const minY = this.camera.bottom;
@@ -197,6 +213,11 @@ class Game extends Scene {
         this.add(newFruit);
     }
 
+    /**
+     * Removes the given fruit and renders splat animation, unless it is a helper ninja
+     * @param {Fruit} fruit - The letter to consider
+     * @param {bool} isHelper - whether or not it is a helper ninja
+     */
     removeFruit(fruit, isHelper) {
         const id = fruit.getId();
 
@@ -221,7 +242,7 @@ class Game extends Scene {
     }
 
     /**
-     * Creates a pixel color.
+     * Accepts a letter from the user, checking for correctness, updating fruits/points, and implementing ninja movement approriately
      * @param {string} letter - The letter to consider
      */
     acceptLetter(letter) {
@@ -284,10 +305,20 @@ class Game extends Scene {
         }
     }
 
+    /**
+     * Calculates point increment based on length of fruit
+     * @param {Fruit} fruit - The fruit in questino
+     */
     calculatePoints(fruit) {
         return fruit.word.length;
     }
 
+    /**
+     * Generates text at a given position
+     * @param {string} message - the content of the message
+     * @param {number} x - the x position of the text
+     * @param {number} y - the y position of the text
+     */
     getText(message, x, y) {
         const fontLoader = new FontLoader();
         let font = fontLoader.parse(CourierFont);
@@ -318,7 +349,7 @@ class Game extends Scene {
     }
 
     /**
-     * updates objects in game.
+     * Updates objects in game.
      * @param {number} time - The time elapsed in the game in seconds
      */
     update(time) {
@@ -387,10 +418,16 @@ class Game extends Scene {
         this.add(this.textLives);
     }
 
+    /**
+     * Adds event listeners needed for this scene.
+     */
     addEvents() {
         window.addEventListener('keydown', this.keyDown, false);
     }
 
+    /**
+     * Removes event listeners.
+     */
     removeEvents() {
         window.removeEventListener('keydown', this.keyDown, false);
     }

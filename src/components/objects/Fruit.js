@@ -40,7 +40,7 @@ export function pickRandomFruitSprites() {
 
 export class Fruit extends Group {
     /**
-     * Creates a pixel color.
+     * Creates a Fruit object.
      * @param {number} fruitId - An integer dynamic id
      * @param {string} word - The word
      * @param {FruitSprites} FruitSprites - The sprites for the fruit
@@ -93,6 +93,10 @@ export class Fruit extends Group {
         this.add(this.text);
     }
 
+    /**
+     * Generates text
+     * @param {string} message - the message to be displayed
+     */
     // Reference: https://threejs.org/docs/#manual/en/introduction/Creating-text
     // Reference: https://threejs.org/examples/#webgl_geometry_text_stroke
     getTextSprite(message) {
@@ -132,14 +136,25 @@ export class Fruit extends Group {
         return text;
     }
 
+    /**
+     * Returns the id of the fruit.
+     */
     getId() {
         return this.fruitId;
     }
 
+    /**
+     * Sets the id of the fruit.
+     * @param {number} newId - the new id of the fruit
+     */
     setId(newId) {
         this.fruitId = newId;
     }
 
+    /**
+     * Accepts a letter from the user, checking for correctness and indicating fruit completion.
+     * @param {string} letter - The letter to consider
+     */
     acceptLetter(letter) {
         // catch erroneous case where fruit is interacted with despite being done
         if (this.currentWordIndex >= this.word.length) {
@@ -150,10 +165,6 @@ export class Fruit extends Group {
         if (this.word.charAt(this.currentWordIndex) === letter) {
             this.currentWordIndex = this.currentWordIndex + 1;
         }
-        // TODO:
-        //  else { // incorrect letter
-        //     // vibrate fruit
-        // }
 
         if (this.currentWordIndex >= this.word.length) {
             return true;
@@ -162,11 +173,19 @@ export class Fruit extends Group {
         return false;
     }
 
+    /**
+     * Adds a slash to the fruit completed
+     * @param {Vector3} position - the position of the fruit
+     */
     addSlash(position) {
         this.slashSprite.position.copy(position);
         this.add(this.slashSprite);
     }
 
+    /**
+     * Adds a splat 
+     * @param {number} time - the time at which to splat
+     */
     splat(time) {
         this.splatTime = time;
 

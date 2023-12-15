@@ -9,6 +9,9 @@ import {
 } from 'audio';
 
 class AudioManager {
+    /**
+     * Creates an AudioManager object
+     */
     constructor() {
         this.audioListener = new AudioListener();
 
@@ -32,24 +35,41 @@ class AudioManager {
         this.sounds = [this.backgroundMusic, this.swordSound, this.splatSound];
     }
 
+    /**
+     * initializes the audiolistener
+     */
     init() {
         this.audioListener.position.set(SceneManager.camera.position);
     }
 
+    /**
+     * Plays the sword audio
+     */
     playSword() {
         this.swordSound.play(1, 0.8);
     }
 
+    /**
+     * Plays the splat audio
+     */
     playSplat() {
         this.splatSound.play(1, 0.8);
     }
 
+    /**
+     * Updates the sound
+     * @param {number} time - The time elapsed in the game in seconds
+     */
     update(time) {
         for (const sound of this.sounds) {
             sound.update(time);
         }
     }
 
+    /**
+     * Plays background music for normal gameplay
+     * @param {boolean} fromDeath - whether the previous state was the death scene
+     */
     normalBackgroundMusic(fromDeath) {
         this.backgroundMusic.play(-1, 0.5);
         if (fromDeath) {
@@ -59,6 +79,10 @@ class AudioManager {
         }
     }
 
+    /**
+     * Plays ending music (win or death)
+     * @param {boolean} death - whether the player is in a state of death
+     */
     switchBackgroundMusic(death) {
         if (death) {
             this.backgroundMusic.stop();
