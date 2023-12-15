@@ -45,8 +45,10 @@ export class Ninja extends Group {
         this.lastPositionChange = performance.now();
     }
 
-    // calculates angle based on given fruit position + changes position
-    // fruitPosition is the fruit Vector3 (can be changed)
+    /**
+     * Calculates angle between based on given fruit position + changes position
+     * @param {Vector3} fruitPosition - The fruit's position
+     */
     changePosition(fruitPosition) {
         fruitPosition = fruitPosition.normalize();
         let angle = Math.atan2(fruitPosition.y, fruitPosition.x);
@@ -79,6 +81,10 @@ export class Ninja extends Group {
         this.lastPositionChange = performance.now() / 1000;
     }
 
+    /**
+     * Updates the ninja
+     * @param {number} time - The time elapsed in the game in seconds
+     */
     update(time) {
         if (
             this.currentSprite != this.front &&
