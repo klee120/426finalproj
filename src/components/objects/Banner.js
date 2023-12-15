@@ -10,7 +10,7 @@ export class Banner extends Group {
         super();
 
         const textureLoader = new TextureLoader();
-        const scale = new Vector3(25, 25, 1);
+        const scale = new Vector3(100, 100, 1);
         this.banner = createSprite(textureLoader, banner, scale);
 
         this.add(this.banner);

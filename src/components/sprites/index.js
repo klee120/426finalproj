@@ -45,7 +45,16 @@ import Up_Black from './up-black.png';
 import Up_Left_Black from './up-left-black.png';
 import Left_Black from './left-black.png';
 import Down_Left_Black from './down-left-black.png';
+
 import Slash from './slash.png';
+
+import Start_Banner from './start-banner.png';
+import End_Banner from './end-banner.png';
+import Death_Banner from './death-banner.png';
+
+import Level1_Banner from './level1.png'
+import Level2_Banner from './level2.png'
+import Level3_Banner from './level3.png'
 
 import Front_Power from './front-power.png';
 import Down_Power from './down-power.png';
@@ -131,11 +140,11 @@ export const HELPER_NINJA_SPRITES = new NinjaSprites(
     Down_Left_Power
 );
 
-export const DEATH_BANNER = Down_Left_Black;
-export const START_BANNER = Down_Left_Red;
-export const END_BANNER = Down_Left_White;
+export const DEATH_BANNER = Death_Banner;
+export const START_BANNER = Start_Banner;
+export const END_BANNER = End_Banner;
 
-export const STAGE_BANNERS = [Apple, Straw, Watermelon];
+export const STAGE_BANNERS = [Level1_Banner, Level2_Banner, Level3_Banner];
 
 export function createSprite(textureLoader, asset, scale) {
     const map = textureLoader.load(asset);
