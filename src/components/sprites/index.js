@@ -47,6 +47,16 @@ import Left_Black from './left-black.png';
 import Down_Left_Black from './down-left-black.png';
 import Slash from './slash.png';
 
+import Front_Power from './front-power.png';
+import Down_Power from './down-power.png';
+import Down_Right_Power from './down-right-power.png';
+import Right_Power from './right-power.png';
+import Up_Right_Power from './up-right-power.png';
+import Up_Power from './up-power.png';
+import Up_Left_Power from './up-left-power.png';
+import Left_Power from './left-power.png';
+import Down_Left_Power from './down-left-power.png';
+
 export { Slash };
 
 export { default as Dojo } from './dojo.jpg';
@@ -109,16 +119,16 @@ export const NINJA_SPRITES = [ninjaWhite, ninjaRed, ninjaBlack];
 // TODO: Actually make pngs for this
 
 export const HELPER_NINJA_SPRITES = new NinjaSprites(
-    'black',
-    Front_Black,
-    Down_Black,
-    Right_Black,
-    Left_Black,
-    Up_Black,
-    Up_Right_Black,
-    Up_Left_Black,
-    Down_Right_Black,
-    Down_Left_Black
+    'power',
+    Front_Power,
+    Down_Power,
+    Right_Power,
+    Left_Power,
+    Up_Power,
+    Up_Right_Power,
+    Up_Left_Power,
+    Down_Right_Power,
+    Down_Left_Power
 );
 
 export const DEATH_BANNER = Down_Left_Black;
