@@ -56,8 +56,10 @@ class SceneManager {
                 this.death.updateStage();
                 this.currentScene.addEvents();
                 this.game = undefined;
-            } else if (this.game.cleared()) {
+            } else if (this.game.isCleared) {
                 this.levelUp();
+            } else if (this.game.metPointRequirement()) {
+                this.game.clear();
             }
         }
     }

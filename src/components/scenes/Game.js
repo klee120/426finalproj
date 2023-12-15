@@ -1,11 +1,17 @@
 import { Fruit, Helper, pickRandomFruitSprites, Ninja, Banner } from 'objects';
-import { Mesh, Vector3, MeshBasicMaterial, ShapeGeometry } from 'three';
-import { Scene } from 'three';
+import {
+    Mesh,
+    Vector3,
+    MeshBasicMaterial,
+    ShapeGeometry,
+    Scene,
+    OrthographicCamera,
+} from 'three';
 import { BasicLights } from 'lights';
-import { OrthographicCamera, TextureLoader } from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { CourierFont } from 'fonts';
 import { AudioManager } from '../managers';
+import { StageClearBanner } from '../sprites';
 
 // https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript
 // generates a random number between min and max
@@ -14,6 +20,7 @@ function generateRandom(min, max) {
 }
 
 const SPLAT_DISPLAY_TIME = 1;
+const MILLISECONDS_FOR_BANNER = 2000;
 
 class Game extends Scene {
     /**
@@ -67,9 +74,8 @@ class Game extends Scene {
             }
         };
 
-        const MILLISECONDS_BEFORE_STARTING = 2000;
         this.nextFruitTime =
-            (MILLISECONDS_BEFORE_STARTING + performance.now()) / 1000;
+            (MILLISECONDS_FOR_BANNER + performance.now()) / 1000;
 
         const levelBanner = new Banner(config.stageBanner);
 
@@ -80,15 +86,40 @@ class Game extends Scene {
 
         // Reference: https://masteringjs.io/tutorials/fundamentals/wait-1-second-then
         new Promise((resolve) =>
-            setTimeout(resolve, MILLISECONDS_BEFORE_STARTING)
+            setTimeout(resolve, MILLISECONDS_FOR_BANNER)
         ).then(() => this.remove(levelBanner));
 
         // prevent multiple helpers on screen
         this.hasHelper = false;
     }
 
-    cleared() {
+    metPointRequirement() {
         return this.points >= this.pointsNeeded;
+    }
+
+    clear() {
+        // note this so we stop spawning fruits
+        this.isClearing = true;
+
+        for (let i = this.fruits.length - 1; i >= 0; i--) {
+            this.removeFruit(this.fruits[i]);
+        }
+
+        const clearBanner = new Banner(
+            StageClearBanner,
+            new Vector3(200, 200, 1)
+        );
+        // z position 1 so in front of ninja
+        clearBanner.position.set(0, 20, 1);
+
+        this.add(clearBanner);
+
+        // Reference: https://masteringjs.io/tutorials/fundamentals/wait-1-second-then
+        new Promise((resolve) =>
+            setTimeout(resolve, MILLISECONDS_FOR_BANNER)
+        ).then(() => {
+            this.isCleared = true;
+        });
     }
 
     addFruit() {
@@ -295,7 +326,7 @@ class Game extends Scene {
         this.ninja.update(time);
 
         // add fruit if necessary
-        if (time > this.nextFruitTime) {
+        if (!this.isClearing && time > this.nextFruitTime) {
             this.addFruit();
             const timeUntilNext = generateRandom(
                 this.secondsBetweenRange[0],

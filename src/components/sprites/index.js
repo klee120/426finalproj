@@ -58,6 +58,7 @@ export const START_NINJA = Front_Black;
 import Level1_Banner from './level1.png';
 import Level2_Banner from './level2.png';
 import Level3_Banner from './level3.png';
+export { default as StageClearBanner } from './stageClearBanner.png';
 
 import Front_Power from './front-power.png';
 import Down_Power from './down-power.png';
