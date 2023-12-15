@@ -307,6 +307,10 @@ class Game extends Scene {
 
             // handle collisions with ninja
             if (this.collisionWithNinja(fruit, time)) {
+                if (fruit.isHelper) {
+                    this.hasHelper = false;
+                }
+
                 if (this.currentFruit === fruit) {
                     this.currentFruit = null;
                 }
@@ -314,7 +318,7 @@ class Game extends Scene {
                 this.removeFruit(fruit, fruit.isHelper);
 
                 // don't remove points for helper
-                if (!this.isHelper) {
+                if (!fruit.isHelper) {
                     this.lives -= 1;
                 }
             }

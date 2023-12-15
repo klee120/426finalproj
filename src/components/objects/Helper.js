@@ -43,7 +43,7 @@ export class Helper extends Fruit {
      */
     constructor(fruitId, word, position, secondsAlive, startingTime) {
         const sprites = new FruitSprites(
-            'bomb',
+            'helper',
             HELPER_NINJA_SPRITES.front,
             getSplatSprite(position)
         );

@@ -2,8 +2,8 @@ import { Color } from 'three';
 import { STAGE_BANNERS } from 'sprites';
 import GameConfig from './GameConfig.js';
 
-const WORDS = {
-    0: [
+const WORDS = [
+    [
         'cat',
         'sun',
         'apple',
@@ -35,7 +35,7 @@ const WORDS = {
         'lace',
         'pool',
     ],
-    1: [
+    [
         'cat',
         'sun',
         'apple',
@@ -97,7 +97,7 @@ const WORDS = {
         'resolution',
         'opacity',
     ],
-    2: [
+    [
         'cat',
         'sun',
         'apple',
@@ -189,35 +189,35 @@ const WORDS = {
         'entrepreneur',
         'luminosity',
     ],
-};
+];
 
-const SPEEDS = {
-    0: [0.5, 1],
-    1: [0.8, 1.5],
-    2: [1.2, 2],
-};
+const SPEEDS = [
+    [0.5, 1],
+    [0.8, 1.5],
+    [1.2, 2],
+];
 
-export const STAGE_CONFIGS = {
-    0: new GameConfig(
+export const STAGE_CONFIGS = [
+    new GameConfig(
         3,
         WORDS[0],
         [2, 3],
         [4, 6],
         new Color(0x7ec0ee),
-        5,
+        100,
         STAGE_BANNERS[0]
     ),
-    1: new GameConfig(
+    new GameConfig(
         3,
         WORDS[1],
         [1, 2],
         [4, 6],
         new Color(0xaec077),
-        5,
+        150,
         STAGE_BANNERS[1]
     ),
-    2: new GameConfig(
-        10,
+    new GameConfig(
+        3,
         WORDS[2],
         [0.5, 1.5],
         [4, 6],
@@ -225,4 +225,4 @@ export const STAGE_CONFIGS = {
         250,
         STAGE_BANNERS[2]
     ),
-};
+];

@@ -1,5 +1,5 @@
 import { Scene, Vector3, OrthographicCamera, Color } from 'three';
-import { START_BANNER } from '../sprites';
+import { TITLE_BANNER, START_BANNER, START_NINJA } from '../sprites';
 import { Banner } from '../objects';
 
 class Start extends Scene {
@@ -9,15 +9,24 @@ class Start extends Scene {
 
         this.background = new Color(0xc2baf8);
 
-        const banner = new Banner(START_BANNER);
-        banner.position.set(0, 10, 0);
+        const startBanner = new Banner(START_BANNER);
+        startBanner.position.set(0, -50, 0);
+        this.add(startBanner);
 
-        this.add(banner);
+        const scale = new Vector3(400, 400, 1);
+        const titleBanner = new Banner(TITLE_BANNER, scale);
+        titleBanner.position.set(0, 10, 0);
+        this.add(titleBanner);
+
+        scale.set(25, 25, 1);
+        const ninjaSprite = new Banner(START_NINJA, scale);
+        ninjaSprite.position.set(0, -15, 0);
+        this.add(ninjaSprite);
 
         // event handler
         this.keyDown = (event) => {
             if (event.key === ' ' || event.code === 'Space') {
-                sceneManager.startOver();
+                sceneManager.startGames();
             }
         };
     }

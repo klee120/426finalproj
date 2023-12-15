@@ -50,6 +50,7 @@ class SceneManager {
                 console.log('level over.');
                 this.currentScene.removeEvents();
                 this.currentScene = this.death;
+                this.death.updateStage();
                 this.currentScene.addEvents();
                 this.game = undefined;
             } else if (this.game.cleared()) {
@@ -60,7 +61,8 @@ class SceneManager {
 
     // for level ups
     levelUp() {
-        if (this.stage === 2) {
+        console.log(STAGE_CONFIGS.length);
+        if (this.stage === STAGE_CONFIGS.length - 1) {
             this.currentScene.removeEvents();
             this.game = undefined;
             this.currentScene = this.end;
@@ -82,6 +84,12 @@ class SceneManager {
     }
 
     startOver() {
+        this.currentScene.removeEvents();
+        this.currentScene = this.start;
+        this.currentScene.addEvents();
+    }
+
+    startGames() {
         this.currentScene.removeEvents();
 
         this.stage = 0;

@@ -48,13 +48,16 @@ import Down_Left_Black from './down-left-black.png';
 
 import Slash from './slash.png';
 
-import Start_Banner from './start-banner.png';
-import End_Banner from './end-banner.png';
-import Death_Banner from './death-banner.png';
+export { default as END_BANNER } from './end-banner.png';
+export { default as DEATH_BANNER } from './death-banner.png';
 
-import Level1_Banner from './level1.png'
-import Level2_Banner from './level2.png'
-import Level3_Banner from './level3.png'
+export { default as START_BANNER } from './start-banner.png';
+export { default as TITLE_BANNER } from './title.png';
+export const START_NINJA = Front_Black;
+
+import Level1_Banner from './level1.png';
+import Level2_Banner from './level2.png';
+import Level3_Banner from './level3.png';
 
 import Front_Power from './front-power.png';
 import Down_Power from './down-power.png';
@@ -81,8 +84,6 @@ export const WATERMELON_SPRITES = new FruitSprites(
     Watermelon,
     WatermelonSplat
 );
-
-export const BOMB_SPRITES = new FruitSprites('bomb', Front_Black, Slash);
 
 let ninjaWhite = new NinjaSprites(
     'white',
@@ -139,10 +140,6 @@ export const HELPER_NINJA_SPRITES = new NinjaSprites(
     Down_Right_Power,
     Down_Left_Power
 );
-
-export const DEATH_BANNER = Death_Banner;
-export const START_BANNER = Start_Banner;
-export const END_BANNER = End_Banner;
 
 export const STAGE_BANNERS = [Level1_Banner, Level2_Banner, Level3_Banner];
 
