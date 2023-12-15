@@ -2,17 +2,16 @@
   "name": "426-final-proj",
   "repository": "426finalproj",
   "version": "0.1.0",
-  "title": "Working Game Title lol",
-  "description": "One to two sentences about the project. Give us extra credit",
+  "title": "Typing Ninja",
+  "description": "A typing game based around a ninja slicing fruits",
   "keywords": [
     "Princeton",
     "graphics",
     "three.js",
     "COS 426",
-    "keywor0d",
-    "keyword1",
-    "keyword2-etc",
-    "but this last entry CANNOT have a comma after it ->"
+    "ninja",
+    "fruit",
+    "typing"
   ],
   "scripts": {
     "start": "webpack-dev-server --mode development --output-public-path \"\"",

@@ -71,8 +71,6 @@ import Down_Left_Power from './down-left-power.png';
 
 export { Slash };
 
-export { default as Dojo } from './dojo.jpg';
-
 export const APPLE_SPRITES = new FruitSprites('apple', Apple, AppleSplat);
 export const STRAW_SPRITES = new FruitSprites('straw', Straw, StrawSplat);
 export const LEMON_SPRITES = new FruitSprites('lemon', Lemon, LemonSplat);
