@@ -109,7 +109,10 @@ class Game extends Scene {
      * and displays a completion banner. Sets this.isCleared after 2 seconds.
      */
     clear() {
-        // note this so we stop spawning fruits
+        // clear() has already been called
+        if (this.isClearing) {
+            return;
+        }
         this.isClearing = true;
 
         for (let i = this.fruits.length - 1; i >= 0; i--) {
